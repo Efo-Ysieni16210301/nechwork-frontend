@@ -11,11 +11,11 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="sidebar">
-      <div className="sidebar-brand">
+    <nav className="navbar">
+      <div className="navbar-brand">
         <NavLink to="/">Ethio Insights</NavLink>
       </div>
-      <ul className="sidebar-links">
+      <ul className="navbar-links">
         <li>
           <NavLink to="/" end>
             Home
