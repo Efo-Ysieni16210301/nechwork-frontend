@@ -1,0 +1,433 @@
+/* ==========================================================================
+   Ethio Insights — theme
+   Import this AFTER any existing global stylesheet so it takes priority,
+   or use it to replace your current CSS file outright.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap");
+
+/* ---- Color tokens ---- */
+:root {
+  --bg: #f8f6f0;
+  --surface: #ffffff;
+  --ink: #201f1a;
+  --ink-soft: #6a6552;
+  --border: #e2ddcc;
+
+  --primary: #24402f;
+  --primary-strong: #16261b;
+  --on-primary: #f8f6f0;
+
+  --accent: #93690f;
+  --accent-soft: #f1e4c0;
+
+  --danger: #a3372f;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #14160f;
+  --surface: #1c1f16;
+  --ink: #efebdd;
+  --ink-soft: #b4af9b;
+  --border: #2c3023;
+
+  --primary: #7fb396;
+  --primary-strong: #9bc7ac;
+  --on-primary: #10160f;
+
+  --accent: #e1b65c;
+  --accent-soft: rgba(225, 182, 92, 0.14);
+
+  --danger: #e08579;
+
+  color-scheme: dark;
+}
+
+/* ---- Base ---- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 0.5em;
+}
+
+h1 {
+  font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+p {
+  margin: 0 0 1em;
+  color: var(--ink-soft);
+  max-width: 68ch;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.btn-primary:hover {
+  background: var(--primary-strong);
+}
+
+/* ---- Masthead / nav (rendered by NavBar.tsx, class name kept as .sidebar) ---- */
+.sidebar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1.1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.sidebar-brand a {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.sidebar-brand a:hover {
+  text-decoration: none;
+}
+
+.sidebar-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.sidebar-links a {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding-bottom: 3px;
+  border-bottom: 2px solid transparent;
+}
+
+.sidebar-links a:hover {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.sidebar-links a.active {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+.sidebar-auth {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.sidebar-user {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.sidebar-logout,
+.sidebar-login-link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sidebar-logout:hover,
+.sidebar-login-link:hover {
+  text-decoration: underline;
+}
+
+.theme-toggle {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+}
+
+/* ---- Home page ---- */
+.home-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 4rem 2rem 5rem;
+}
+
+.home-hero h1 {
+  margin-bottom: 0.6em;
+}
+
+.home-lead {
+  font-size: 1.1rem;
+  margin-bottom: 1.75em;
+}
+
+.home-topics {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.topic-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.topic-list li {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+}
+
+/* ---- About page ---- */
+.about-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 4rem 2rem 5rem;
+}
+
+.about-lead {
+  font-size: 1.1rem;
+}
+
+.about-section {
+  margin-top: 2.5rem;
+}
+
+/* ---- Articles list ---- */
+.article-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+.article-back-link {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.article-body p {
+  color: var(--ink);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.upvote-button {
+  margin-top: 1.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.upvote-button:hover {
+  border-color: var(--accent);
+}
+
+.auth-prompt {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+}
+
+/* ---- Comments ---- */
+.comments-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.comment-list {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+}
+
+.comment-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.comment-author {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.comment-text {
+  margin: 0.3rem 0 0;
+  color: var(--ink);
+}
+
+.no-comments {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.comment-form {
+  margin-top: 1.5rem;
+}
+
+.comment-textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+.comment-textarea:focus {
+  border-color: var(--accent);
+}
+
+.comment-error {
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+.comment-submit {
+  margin-top: 0.75rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.comment-submit:hover {
+  background: var(--primary-strong);
+}
+
+.comment-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .sidebar {
+    padding: 1rem 1.25rem;
+  }
+
+  .sidebar-links {
+    order: 3;
+    width: 100%;
+    gap: 1.1rem;
+  }
+
+  .home-page,
+  .about-page,
+  .article-page {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}

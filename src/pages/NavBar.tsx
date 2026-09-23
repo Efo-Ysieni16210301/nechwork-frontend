@@ -1,9 +1,11 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function NavBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     await logout();
@@ -11,11 +13,11 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-brand">
+    <nav className="sidebar">
+      <div className="sidebar-brand">
         <NavLink to="/">Ethio Insights</NavLink>
       </div>
-      <ul className="navbar-links">
+      <ul className="sidebar-links">
         <li>
           <NavLink to="/" end>
             Home
@@ -30,6 +32,16 @@ export default function NavBar() {
       </ul>
 
       <div className="sidebar-auth">
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={
+            theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+          }
+        >
+          {theme === "dark" ? "☀" : "☾"}
+        </button>
         {user ? (
           <>
             <span className="sidebar-user">{user.email}</span>
