@@ -11,6 +11,10 @@ import NotFound from "./pages/NotFound";
 import Layout from "./Layout";
 import api from "./api/client";
 import AdminPage from "./pages/AdminPage";
+import ShopPage from "./pages/ShopPage";
+import GalleryPage from "./pages/GalleryPage";
+import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 const routes = [
   {
@@ -19,6 +23,10 @@ const routes = [
     errorElement: <NotFound />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: "shop", element: <ShopPage /> },
+      { path: "gallery", element: <GalleryPage /> },
+      { path: "cart", element: <CartPage /> },
+      { path: "checkout", element: <CheckoutPage /> },
       { path: "about", element: <AboutPage /> },
       { path: "login", element: <LoginPage /> },
       { path: "signup", element: <SignupPage /> },

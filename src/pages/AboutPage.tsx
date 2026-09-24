@@ -2,41 +2,38 @@ export default function AboutPage() {
   return (
     <div className="about-page">
       <section className="about-hero">
-        <h1>About Ethio Insights</h1>
+        <h1>About mara</h1>
         <p className="about-lead">
-          Ethio Insights is an independent look at Ethiopia's economy, told
-          through the industries that power it.
+          mara is a considered collection of everyday goods, gathered from
+          makers and growers who care deeply about their craft.
         </p>
       </section>
 
       <section className="about-section">
         <h2>Why we started this</h2>
         <p>
-          Most coverage of Ethiopia's economy is written for investors and
-          policymakers abroad, in language that skips over how an industry
-          actually works. We wanted something closer to the ground: how coffee
-          gets from a farm in Kaffa to a cup overseas, why sesame has become one
-          of the country's most valuable exports, and what it takes to grow a
-          sugar industry from scratch.
+          We started with a simple belief: the things we use every day should
+          feel good to live with. From highland coffee and fragrant tea to
+          pantry staples and hand-thrown homeware, each piece has a clear
+          origin and a human story.
         </p>
       </section>
 
       <section className="about-section">
         <h2>What we cover</h2>
         <p>
-          Agriculture and export crops, manufacturing, trade policy, and the
-          infrastructure that connects Ethiopian producers to global markets.
-          Each article aims to explain one part of that picture clearly enough
-          that you don't need a background in economics to follow it.
+          Thoughtful coffee, tea, pantry goods, homeware, and gifts. We keep
+          our collection small so we can know the people behind the products
+          and make room for new discoveries.
         </p>
       </section>
 
       <section className="about-section">
         <h2>How we work</h2>
         <p>
-          Articles draw on public trade data, government and industry reports,
-          and reporting from Ethiopian and international sources. We link to
-          what we can, and we correct mistakes when we find them.
+          We work directly with small producers wherever we can, pay fair
+          prices, and choose materials and packaging with a lighter footprint.
+          Good design is better when it is also good business.
         </p>
       </section>
     </div>
