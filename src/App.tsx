@@ -16,6 +16,7 @@ import GalleryPage from "./pages/GalleryPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ProductAdminPage from "./pages/ProductAdminPage";
+import AdminOrdersPage from "./pages/AdminOrdersPage";
 
 const routes = [
   {
@@ -59,6 +60,14 @@ const routes = [
         element: <ProductAdminPage />,
         loader: async () => {
           const res = await api.get("/products");
+          return res.data;
+        },
+      },
+      {
+        path: "admin/orders",
+        element: <AdminOrdersPage />,
+        loader: async () => {
+          const res = await api.get("/admin/orders");
           return res.data;
         },
       },

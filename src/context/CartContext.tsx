@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { Product } from "../data/products";
+import { useAuth } from "./AuthContext";
 
 export interface CartItem {
   product: Product;
@@ -21,14 +22,27 @@ const CartContext = createContext<CartContextValue | undefined>(undefined);
 const storageKey = "shop-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem(storageKey);
-    return saved ? (JSON.parse(saved) as CartItem[]) : [];
-  });
+  const { user, loading: authLoading } = useAuth();
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [cartLoaded, setCartLoaded] = useState(false);
+  const userStorageKey = user ? `${storageKey}:${user.uid}` : `${storageKey}:guest`;
 
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(items));
-  }, [items]);
+    if (authLoading) return;
+    setCartLoaded(false);
+    const saved = localStorage.getItem(userStorageKey);
+    try {
+      setItems(saved ? (JSON.parse(saved) as CartItem[]) : []);
+    } catch {
+      localStorage.removeItem(userStorageKey);
+      setItems([]);
+    }
+    setCartLoaded(true);
+  }, [authLoading, userStorageKey]);
+
+  useEffect(() => {
+    if (cartLoaded) localStorage.setItem(userStorageKey, JSON.stringify(items));
+  }, [cartLoaded, items, userStorageKey]);
 
   const value = useMemo<CartContextValue>(() => ({
     items,
