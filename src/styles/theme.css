@@ -472,3 +472,12 @@ button {
     padding-right: 1.25rem;
   }
 }
+.admin-create {
+  margin-bottom: 40px;
+}
+
+.admin-article-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

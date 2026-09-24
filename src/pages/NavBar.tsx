@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 
 export default function NavBar() {
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
@@ -29,6 +29,11 @@ export default function NavBar() {
         <li>
           <NavLink to="/articles">Articles</NavLink>
         </li>
+        {isAdmin && (
+          <li>
+            <NavLink to="/admin">Admin</NavLink>
+          </li>
+        )}
       </ul>
 
       <div className="sidebar-auth">

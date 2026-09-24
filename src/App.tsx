@@ -10,6 +10,7 @@ import SignupPage from "./pages/SignupPage";
 import NotFound from "./pages/NotFound";
 import Layout from "./Layout";
 import api from "./api/client";
+import AdminPage from "./pages/AdminPage";
 
 const routes = [
   {
@@ -24,6 +25,14 @@ const routes = [
       {
         path: "articles",
         element: <ArticlesList />,
+        loader: async () => {
+          const res = await api.get("/articles");
+          return res.data;
+        },
+      },
+      {
+        path: "admin",
+        element: <AdminPage />,
         loader: async () => {
           const res = await api.get("/articles");
           return res.data;
