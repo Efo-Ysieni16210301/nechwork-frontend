@@ -9,7 +9,9 @@ import api from "../api/client";
 import { useAuth } from "../context/AuthContext";
 
 interface Comment {
+  _id: string;
   postedBy: string;
+  uid: string;
   text: string;
 }
 
@@ -31,6 +33,9 @@ export default function ArticlePage() {
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState("");
+
   const handleUpvote = () => {
     api.post(`/articles/${name}/upvote`).then(() => {
       revalidator.revalidate();
@@ -49,7 +54,7 @@ export default function ArticlePage() {
     setSubmitting(true);
 
     api
-      .post(`/articles/${name}/comments`, { postedBy: user?.email, text })
+      .post(`/articles/${name}/comments`, { text })
       .then(() => {
         setText("");
         setSubmitting(false);
@@ -59,6 +64,33 @@ export default function ArticlePage() {
         setFormError(err.response?.data?.error || "Failed to post comment");
         setSubmitting(false);
       });
+  };
+
+  const startEditing = (comment: Comment) => {
+    setEditingId(comment._id);
+    setEditText(comment.text);
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditText("");
+  };
+
+  const saveEdit = (commentId: string) => {
+    api
+      .patch(`/articles/${name}/comments/${commentId}`, { text: editText })
+      .then(() => {
+        setEditingId(null);
+        setEditText("");
+        revalidator.revalidate();
+      });
+  };
+
+  const deleteComment = (commentId: string) => {
+    if (!confirm("Delete this comment?")) return;
+    api.delete(`/articles/${name}/comments/${commentId}`).then(() => {
+      revalidator.revalidate();
+    });
   };
 
   return (
@@ -72,13 +104,14 @@ export default function ArticlePage() {
           <p key={index}>{paragraph}</p>
         ))}
       </div>
+
       {user ? (
         <button onClick={handleUpvote} className="upvote-button">
           👍 {article.upvotes} upvotes
         </button>
       ) : (
         <p className="auth-prompt">
-          👍 {article.upvotes} upvotes —{""} <Link to="/login">Log in</Link> to
+          👍 {article.upvotes} upvotes — <Link to="/login">Log in</Link> to
           upvote
         </p>
       )}
@@ -90,14 +123,58 @@ export default function ArticlePage() {
           <p className="no-comments">No comments yet. Be the first!</p>
         ) : (
           <ul className="comment-list">
-            {article.comments.map((c, index) => (
-              <li key={index} className="comment-item">
+            {article.comments.map((c) => (
+              <li key={c._id} className="comment-item">
                 <span className="comment-author">{c.postedBy}</span>
-                <p className="comment-text">{c.text}</p>
+
+                {editingId === c._id ? (
+                  <div className="comment-edit-form">
+                    <textarea
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      className="comment-textarea"
+                    />
+                    <div className="comment-edit-actions">
+                      <button
+                        onClick={() => saveEdit(c._id)}
+                        className="comment-submit"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={cancelEditing}
+                        className="comment-cancel"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p className="comment-text">{c.text}</p>
+                    {user?.uid === c.uid && (
+                      <div className="comment-owner-actions">
+                        <button
+                          onClick={() => startEditing(c)}
+                          className="comment-link-btn"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => deleteComment(c._id)}
+                          className="comment-link-btn danger"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
               </li>
             ))}
           </ul>
         )}
+
         {user ? (
           <form onSubmit={handleCommentSubmit} className="comment-form">
             <textarea
