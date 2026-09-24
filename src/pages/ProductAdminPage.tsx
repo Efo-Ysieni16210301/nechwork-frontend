@@ -46,8 +46,8 @@ export default function ProductAdminPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const cloudName = import.meta.env.CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = import.meta.env.CLOUDINARY_UPLOAD_PRESET;
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
     if (!cloudName || !uploadPreset) {
       setError(
         "Cloudinary upload is not configured. Add the Cloudinary values to front-end/.env.local.",
@@ -76,9 +76,14 @@ export default function ProductAdminPage() {
           body,
         },
       );
+      const result = (await response.json()) as {
+        secure_url?: string;
+        error?: { message?: string };
+      };
       if (!response.ok)
-        throw new Error("Cloudinary could not upload this image.");
-      const result = (await response.json()) as { secure_url?: string };
+        throw new Error(
+          result.error?.message || "Cloudinary could not upload this image.",
+        );
       if (!result.secure_url)
         throw new Error("Cloudinary returned no image URL.");
       update("image", result.secure_url);
