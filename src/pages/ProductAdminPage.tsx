@@ -9,6 +9,8 @@ interface Product {
   category: string;
   price: number;
   image: string;
+  description: string;
+  badge?: string;
 }
 
 export default function ProductAdminPage() {
@@ -28,6 +30,7 @@ export default function ProductAdminPage() {
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [imageMode, setImageMode] = useState<"url" | "upload">("upload");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   if (loading) return <p className="article-page">Loading...</p>;
   if (!isAdmin)
@@ -103,11 +106,16 @@ export default function ProductAdminPage() {
     setError(null);
     setSubmitting(true);
     try {
-      await api.post("/products", {
+      const payload = {
         ...form,
         price: Number(form.price),
         badge: form.badge || undefined,
-      });
+      };
+      if (editingId) {
+        await api.put(`/products/${editingId}`, payload);
+      } else {
+        await api.post("/products", payload);
+      }
       setForm({
         id: "",
         name: "",
@@ -117,15 +125,36 @@ export default function ProductAdminPage() {
         image: "",
         badge: "",
       });
+      setEditingId(null);
       revalidator.revalidate();
     } catch (requestError) {
       setError(
         (requestError as { response?: { data?: { error?: string } } }).response
-          ?.data?.error || "Could not create product.",
+          ?.data?.error ||           editingId ? "Could not update product." : "Could not create product.",
       );
     } finally {
       setSubmitting(false);
     }
+  };
+  const startEditing = (product: Product) => {
+    setEditingId(product.id);
+    setForm({
+      id: product.id,
+      name: product.name,
+      category: product.category,
+      description: product.description,
+      price: String(product.price),
+      image: product.image,
+      badge: product.badge || "",
+    });
+    setImageMode("url");
+    setError(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const cancelEditing = () => {
+    setEditingId(null);
+    setForm({ id: "", name: "", category: "Coffee", description: "", price: "", image: "", badge: "" });
+    setError(null);
   };
   const archive = async (id: string) => {
     if (!confirm("Archive this product from the shop?")) return;
@@ -138,21 +167,22 @@ export default function ProductAdminPage() {
       <p className="eyebrow">Store management</p>
       <h1>Products</h1>
       <p>
-        Add products to the shop using an image URL. Uploaded products appear
-        immediately in the storefront.
+        Add products to the shop or edit existing products. Changes appear in
+        the storefront after saving.
       </p>
       <section className="admin-create">
-        <h2>Add a product</h2>
+        <h2>{editingId ? "Edit product" : "Add a product"}</h2>
         <form onSubmit={handleSubmit} className="product-admin-form">
           <div className="form-row">
             <label>
               Product ID
               <input
-                required
+                required={!editingId}
                 pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
                 value={form.id}
                 onChange={(e) => update("id", e.target.value)}
                 placeholder="ethiopian-honey"
+                disabled={Boolean(editingId)}
               />
             </label>
             <label>
@@ -262,9 +292,10 @@ export default function ProductAdminPage() {
             />
           </label>
           {error && <p className="comment-error">{error}</p>}
-          <button className="comment-submit" disabled={submitting}>
-            {submitting ? "Adding..." : "Add product"}
+          <button className="comment-submit" disabled={submitting || uploading}>
+            {submitting ? (editingId ? "Saving..." : "Adding...") : (editingId ? "Save changes" : "Add product")}
           </button>
+          {editingId && <button type="button" className="comment-cancel" onClick={cancelEditing}>Cancel edit</button>}
         </form>
       </section>
       <section className="admin-list">
@@ -279,12 +310,10 @@ export default function ProductAdminPage() {
                   {product.category} · ${product.price.toFixed(2)}
                 </span>
               </span>
-              <button
-                className="comment-link-btn danger"
-                onClick={() => archive(product.id)}
-              >
-                Archive
-              </button>
+              <span className="admin-product-actions">
+                <button className="comment-link-btn" onClick={() => startEditing(product)}>Edit</button>
+                <button className="comment-link-btn danger" onClick={() => archive(product.id)}>Archive</button>
+              </span>
             </li>
           ))}
         </ul>

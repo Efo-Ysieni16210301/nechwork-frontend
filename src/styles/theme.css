@@ -491,6 +491,7 @@ button {
   align-items: center;
   justify-content: space-between;
 }
+.admin-product-actions { display: flex; gap: 1rem; }
 
 /* ---- Storefront ---- */
 .eyebrow { color: var(--accent); font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }

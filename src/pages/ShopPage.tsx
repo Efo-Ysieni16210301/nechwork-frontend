@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { categories, products } from "../data/products";
+import { Link, useLoaderData } from "react-router-dom";
+import { categories } from "../data/products";
+import type { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
 
 export default function ShopPage() {
+  const products = useLoaderData() as Product[];
   const [category, setCategory] = useState<(typeof categories)[number]>("All");
   const [query, setQuery] = useState("");
   const { addToCart } = useCart();

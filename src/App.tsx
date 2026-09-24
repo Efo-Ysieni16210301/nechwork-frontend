@@ -24,7 +24,14 @@ const routes = [
     errorElement: <NotFound />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "shop", element: <ShopPage /> },
+      {
+        path: "shop",
+        element: <ShopPage />,
+        loader: async () => {
+          const res = await api.get("/products");
+          return res.data;
+        },
+      },
       { path: "gallery", element: <GalleryPage /> },
       { path: "cart", element: <CartPage /> },
       { path: "checkout", element: <CheckoutPage /> },
