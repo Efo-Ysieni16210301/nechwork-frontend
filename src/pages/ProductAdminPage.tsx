@@ -18,11 +18,53 @@ export default function ProductAdminPage() {
   const [form, setForm] = useState({ id: "", name: "", category: "Coffee", description: "", price: "", image: "", badge: "" });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [imageMode, setImageMode] = useState<"url" | "upload">("upload");
 
   if (loading) return <p className="article-page">Loading...</p>;
   if (!isAdmin) return <main className="article-page"><p>You don't have access to this page.</p><Link to="/shop">← Back to shop</Link></main>;
 
   const update = (field: keyof typeof form, value: string) => setForm((current) => ({ ...current, [field]: value }));
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+    if (!cloudName || !uploadPreset) {
+      setError("Cloudinary upload is not configured. Add the Cloudinary values to front-end/.env.local.");
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      setError("Please choose an image file.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Images must be 10 MB or smaller.");
+      return;
+    }
+
+    setError(null);
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("upload_preset", uploadPreset);
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: "POST",
+        body,
+      });
+      if (!response.ok) throw new Error("Cloudinary could not upload this image.");
+      const result = (await response.json()) as { secure_url?: string };
+      if (!result.secure_url) throw new Error("Cloudinary returned no image URL.");
+      update("image", result.secure_url);
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : "Image upload failed.");
+    } finally {
+      setUploading(false);
+      event.target.value = "";
+    }
+  };
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
@@ -54,7 +96,21 @@ export default function ProductAdminPage() {
           <div className="form-row"><label>Product ID<input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={form.id} onChange={(e) => update("id", e.target.value)} placeholder="ethiopian-honey" /></label><label>Name<input required value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Wildflower honey" /></label></div>
           <div className="form-row"><label>Category<select value={form.category} onChange={(e) => update("category", e.target.value)}><option>Coffee</option><option>Tea</option><option>Pantry</option><option>Home & gifts</option></select></label><label>Price<input required min="0" step="0.01" type="number" value={form.price} onChange={(e) => update("price", e.target.value)} placeholder="18.00" /></label></div>
           <label>Description<textarea required value={form.description} onChange={(e) => update("description", e.target.value)} placeholder="A short description for the product card." /></label>
-          <label>Image URL<input required type="url" value={form.image} onChange={(e) => update("image", e.target.value)} placeholder="https://..." /></label>
+          <div className="image-input-section">
+            <div className="image-input-tabs">
+              <button type="button" className={imageMode === "upload" ? "active" : ""} onClick={() => setImageMode("upload")}>Upload an image</button>
+              <button type="button" className={imageMode === "url" ? "active" : ""} onClick={() => setImageMode("url")}>Use image URL</button>
+            </div>
+            {imageMode === "upload" ? (
+              <label>Image file
+                <input required={!form.image} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleImageUpload} disabled={uploading} />
+                <span className="field-hint">{uploading ? "Uploading image..." : "PNG, JPG, or WebP up to 10 MB. Files are stored in Cloudinary."}</span>
+              </label>
+            ) : (
+              <label>Image URL<input required={!form.image} type="url" value={form.image} onChange={(e) => update("image", e.target.value)} placeholder="https://..." /></label>
+            )}
+            {form.image && <img className="product-image-preview" src={form.image} alt="Selected product preview" />}
+          </div>
           <label>Badge <span className="field-hint">(optional)</span><input value={form.badge} onChange={(e) => update("badge", e.target.value)} placeholder="Bestseller" /></label>
           {error && <p className="comment-error">{error}</p>}
           <button className="comment-submit" disabled={submitting}>{submitting ? "Adding..." : "Add product"}</button>

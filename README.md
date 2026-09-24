@@ -1,4 +1,24 @@
-# React + TypeScript + Vite
+# Storefront frontend
+
+## Product image uploads
+
+Product management supports either a public image URL or a local file upload
+through Cloudinary's unsigned upload endpoint. Cloudinary's free plan is
+enough for development and does not require Firebase Storage.
+
+1. Create a free Cloudinary account.
+2. In **Settings → Upload**, create an **unsigned upload preset**.
+3. Copy `.env.example` to `.env.local`.
+4. Set `VITE_CLOUDINARY_CLOUD_NAME` to your Cloudinary cloud name.
+5. Set `VITE_CLOUDINARY_UPLOAD_PRESET` to the unsigned preset name.
+6. Restart the Vite dev server.
+
+Only the cloud name and unsigned preset are exposed in the frontend. Never put
+the Cloudinary API secret in a `VITE_` variable or commit it to the project.
+
+The upload flow validates image type and size in the browser, uploads the
+selected file to Cloudinary, then saves the returned secure image URL with the
+product through the backend API.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
