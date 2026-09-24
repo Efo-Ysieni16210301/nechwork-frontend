@@ -32,12 +32,16 @@ export default function NavBar() {
           <NavLink to="/gallery">Gallery</NavLink>
         </li>
         <li>
+          <NavLink to="/articles">Articles</NavLink>
+        </li>
+        <li>
           <NavLink to="/about">About</NavLink>
         </li>
         {isAdmin && (
-          <li>
-            <NavLink to="/admin">Admin</NavLink>
-          </li>
+          <>
+            <li><NavLink to="/admin">Admin</NavLink></li>
+            <li><NavLink to="/admin/products">Products</NavLink></li>
+          </>
         )}
       </ul>
 

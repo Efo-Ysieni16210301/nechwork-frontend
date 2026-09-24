@@ -15,6 +15,7 @@ import ShopPage from "./pages/ShopPage";
 import GalleryPage from "./pages/GalleryPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import ProductAdminPage from "./pages/ProductAdminPage";
 
 const routes = [
   {
@@ -43,6 +44,14 @@ const routes = [
         element: <AdminPage />,
         loader: async () => {
           const res = await api.get("/articles");
+          return res.data;
+        },
+      },
+      {
+        path: "admin/products",
+        element: <ProductAdminPage />,
+        loader: async () => {
+          const res = await api.get("/products");
           return res.data;
         },
       },

@@ -475,6 +475,11 @@ button {
 .admin-create {
   margin-bottom: 40px;
 }
+.product-admin-form { display: grid; gap: 1rem; max-width: 760px; }
+.product-admin-form label { display: grid; gap: .35rem; color: var(--ink-soft); font-size: .85rem; }
+.product-admin-form input, .product-admin-form textarea, .product-admin-form select { width: 100%; border: 1px solid var(--border); background: var(--surface); color: var(--ink); padding: .7rem; font: inherit; }
+.product-admin-form textarea { min-height: 100px; resize: vertical; }
+.field-hint { font-size: .75rem; }
 
 .admin-article-row {
   display: flex;
