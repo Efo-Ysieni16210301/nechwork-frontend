@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useCart } from "../context/CartContext";
@@ -10,69 +11,84 @@ export default function NavBar() {
   const { theme, toggleTheme } = useTheme();
   const { itemCount } = useCart();
   const { t, toggleLanguage, language } = useLanguage();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     navigate("/");
   };
 
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <nav className="sidebar">
+    <nav className={`sidebar ${menuOpen ? "menu-open" : ""}`}>
       <div className="sidebar-brand">
-        <NavLink to="/" className="brand-lockup">
+        <NavLink to="/" className="brand-lockup" onClick={closeMenu}>
           <span className="brand-mark">◎</span>
           <span>Nech Work</span>
         </NavLink>
       </div>
-      <ul className="sidebar-links">
+      <button
+        type="button"
+        className="menu-toggle"
+        onClick={() => setMenuOpen((open) => !open)}
+        aria-expanded={menuOpen}
+        aria-controls="site-navigation"
+        aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+      <ul id="site-navigation" className="sidebar-links">
         <li>
-          <NavLink to="/" end>
+          <NavLink to="/" end onClick={closeMenu}>
             {t("home")}
           </NavLink>
         </li>
         <li>
-          <NavLink to="/shop">{t("shop")}</NavLink>
+          <NavLink to="/shop" onClick={closeMenu}>{t("shop")}</NavLink>
         </li>
         <li>
-          <NavLink to="/gallery">{t("gallery")}</NavLink>
+          <NavLink to="/gallery" onClick={closeMenu}>{t("gallery")}</NavLink>
         </li>
         <li>
-          <NavLink to="/articles">{t("articles")}</NavLink>
+          <NavLink to="/articles" onClick={closeMenu}>{t("articles")}</NavLink>
         </li>
         <li>
-          <NavLink to="/about">{t("about")}</NavLink>
+          <NavLink to="/about" onClick={closeMenu}>{t("about")}</NavLink>
         </li>
         {isAdmin && (
           <>
             <li>
-              <NavLink to="/admin">{t("admin")}</NavLink>
+              <NavLink to="/admin" onClick={closeMenu}>{t("admin")}</NavLink>
             </li>
             <li>
-              <NavLink to="/admin/products">{t("products")}</NavLink>
+              <NavLink to="/admin/products" onClick={closeMenu}>{t("products")}</NavLink>
             </li>
             <li>
-              <NavLink to="/admin/categories">Categories</NavLink>
+              <NavLink to="/admin/categories" onClick={closeMenu}>Categories</NavLink>
             </li>
             <li>
-              <NavLink to="/admin/gallery">Gallery manager</NavLink>
+              <NavLink to="/admin/gallery" onClick={closeMenu}>Gallery manager</NavLink>
             </li>
             <li>
-              <NavLink to="/admin/orders">{t("orders")}</NavLink>
+              <NavLink to="/admin/orders" onClick={closeMenu}>{t("orders")}</NavLink>
             </li>
             <li>
-              <NavLink to="/admin/customers">{t("customers")}</NavLink>
+              <NavLink to="/admin/customers" onClick={closeMenu}>{t("customers")}</NavLink>
             </li>
           </>
         )}
         {user && !isAdmin && (
           <li>
-            <NavLink to="/orders">{t("myOrders")}</NavLink>
+            <NavLink to="/orders" onClick={closeMenu}>{t("myOrders")}</NavLink>
           </li>
         )}
       </ul>
 
       <div className="sidebar-auth">
-        <NavLink to="/cart" className="cart-link">
+        <NavLink to="/cart" className="cart-link" onClick={closeMenu}>
           {t("bag")} <span>{itemCount}</span>
         </NavLink>
         <button
@@ -104,10 +120,10 @@ export default function NavBar() {
           </>
         ) : (
           <>
-            <NavLink to="/login" className="sidebar-login-link">
+            <NavLink to="/login" className="sidebar-login-link" onClick={closeMenu}>
               {t("login")}
             </NavLink>
-            <NavLink to="/signup" className="btn btn-primary nav-signup">
+            <NavLink to="/signup" className="btn btn-primary nav-signup" onClick={closeMenu}>
               {t("signup")}
             </NavLink>
           </>

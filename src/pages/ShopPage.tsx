@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useSearchParams } from "react-router-dom";
 import { categories as fallbackCategories } from "../data/products";
 import type { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
@@ -8,9 +8,11 @@ import api from "../api/client";
 
 export default function ShopPage() {
   const products = useLoaderData() as Product[];
+  const [searchParams] = useSearchParams();
   const [categories, setCategories] = useState<string[]>([...fallbackCategories]);
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState(searchParams.get("category") || "All");
   const [query, setQuery] = useState("");
+  const [sort, setSort] = useState("featured");
   const { addToCart } = useCart();
   const { t } = useLanguage();
   useEffect(() => {
@@ -22,7 +24,11 @@ export default function ShopPage() {
     const matchesCategory = category === "All" || product.category === category;
     const matchesSearch = `${product.name} ${product.description}`.toLowerCase().includes(query.toLowerCase());
     return matchesCategory && matchesSearch;
-  }), [category, products, query]);
+  }).sort((first, second) => {
+    if (sort === "price-low") return first.price - second.price;
+    if (sort === "price-high") return second.price - first.price;
+    return 0;
+  }), [category, products, query, sort]);
 
   return (
     <main className="shop-page">
@@ -46,6 +52,14 @@ export default function ShopPage() {
           <span className="sr-only">Search products</span>
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("searchShop")} />
           <span>⌕</span>
+        </label>
+        <label className="sort-field">
+          <span>Sort</span>
+          <select value={sort} onChange={(event) => setSort(event.target.value)}>
+            <option value="featured">Featured</option>
+            <option value="price-low">Price: low to high</option>
+            <option value="price-high">Price: high to low</option>
+          </select>
         </label>
       </div>
       <div className="product-grid">
