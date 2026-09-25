@@ -1,13 +1,14 @@
 import { Link, useLoaderData } from "react-router-dom";
 import type { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
+import Reveal from "../components/Reveal";
 
 export default function HomePage() {
   const products = useLoaderData() as Product[];
   const { addToCart } = useCart();
   return (
     <div className="home-page">
-      <section className="home-hero">
+      <Reveal className="home-hero">
         <div className="hero-copy">
           <p className="eyebrow">Thoughtfully sourced in Ethiopia</p>
           <h1>Find something <em>worth savoring.</em></h1>
@@ -21,24 +22,24 @@ export default function HomePage() {
         </div>
         </div>
         <img className="hero-image" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=85" alt="A cup of coffee on a sunny cafe table" />
-      </section>
+      </Reveal>
 
-      <section className="ritual-banner">
+      <Reveal className="ritual-banner" delay={80}>
         <div>
           <p className="eyebrow">Not sure where to start?</p>
           <h2>Tell us what you like. We’ll help you find your next favorite.</h2>
         </div>
         <Link to="/shop" className="btn btn-light">Explore your taste <span>→</span></Link>
-      </section>
+      </Reveal>
 
-      <section className="home-featured">
+      <Reveal className="home-featured" delay={120}>
         <div className="section-heading"><div><p className="eyebrow">A few favourites</p><h2>Made for your ritual</h2></div><Link to="/shop" className="text-link">Shop all →</Link></div>
         <div className="featured-grid">
           {products.slice(0, 3).map((product) => <article className="featured-card" key={product.id}><img src={product.image} alt={product.name} /><div><span>{product.category}</span><h3>{product.name}</h3><strong>${product.price}</strong><button onClick={() => addToCart(product)}>Add to bag +</button></div></article>)}
         </div>
-      </section>
+      </Reveal>
 
-      <section className="how-it-works">
+      <Reveal className="how-it-works" delay={160}>
         <p className="eyebrow">The Nech Work way</p>
         <h2>Good things, made easy.</h2>
         <div className="how-it-works-grid">
@@ -46,7 +47,7 @@ export default function HomePage() {
           <div><span>02</span><h3>We pack with care</h3><p>Every order is prepared by hand and ready to make an ordinary day feel special.</p></div>
           <div><span>03</span><h3>Enjoy the ritual</h3><p>Make time for the little things. We’ll keep bringing you more to discover.</p></div>
         </div>
-      </section>
+      </Reveal>
     </div>
   );
 }

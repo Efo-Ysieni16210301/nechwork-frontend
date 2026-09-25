@@ -78,6 +78,40 @@ h3 {
 h1 {
   font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
   letter-spacing: -0.01em;
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.route-transition {
+  animation: route-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition:
+    opacity 0.75s ease var(--reveal-delay, 0ms),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 h2 {
@@ -694,6 +728,21 @@ button {
   .gallery-grid { grid-template-columns: 1fr 1fr; }
   .gallery-grid .gallery-feature { grid-row: auto; grid-column: 1 / -1; }
   .gallery-grid .gallery-feature img { height: 360px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .route-transition,
+  .reveal,
+  .reveal.is-visible {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 @media (max-width: 520px) {
   .home-page, .shop-page, .gallery-page, .cart-page, .checkout-page { padding: 2.5rem 1.25rem 4rem; }
