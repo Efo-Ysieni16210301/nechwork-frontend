@@ -6,7 +6,7 @@ export default function AboutPage() {
       <section className="about-hero">
         <h1>About Nech Work</h1>
         <p className="about-lead">
-          mara is a considered collection of everyday goods, gathered from
+          Nech Work is a considered collection of everyday goods, gathered from
           makers and growers who care deeply about their craft.
         </p>
       </section>
@@ -23,11 +23,15 @@ export default function AboutPage() {
 
       <section className="about-section company-contact">
         <h2>Contact us</h2>
-        <p><strong>{company.name}</strong></p>
+        <p>
+          <strong>{company.name}</strong>
+        </p>
         {company.offices.map((office) => (
           <p key={office.name}>
-            <strong>{office.name}</strong><br />
-            Phone: <a href={`tel:${office.phone}`}>{office.phone}</a><br />
+            <strong>{office.name}</strong>
+            <br />
+            Phone: <a href={`tel:${office.phone}`}>{office.phone}</a>
+            <br />
             Address: {office.address}
           </p>
         ))}
