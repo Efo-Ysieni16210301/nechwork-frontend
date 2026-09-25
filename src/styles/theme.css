@@ -771,6 +771,19 @@ button {
   font-size: 0.95rem;
 }
 
+.telegram-login-block {
+  align-items: center;
+  display: grid;
+  gap: 0.7rem;
+  justify-items: center;
+  margin-top: 1rem;
+}
+
+.telegram-login-block > span {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
 /* ---- Comments ---- */
 .comments-section {
   margin-top: 3rem;

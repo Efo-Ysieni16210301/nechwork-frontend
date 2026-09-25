@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import {
   onAuthStateChanged,
@@ -24,6 +24,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
+  loginWithTelegram: (data: Record<string, unknown>) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -43,8 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const tokenResult = await firebaseUser.getIdTokenResult(true);
         setIsAdmin(tokenResult.claims.admin === true);
         try {
-          const profile = await api.get<{ phoneVerified?: boolean } | null>("/profile");
-          setIsFullyVerified(firebaseUser.emailVerified || profile.data?.phoneVerified === true);
+          const profile = await api.get<{ phoneVerified?: boolean; telegramVerified?: boolean } | null>("/profile");
+          setIsFullyVerified(firebaseUser.emailVerified || profile.data?.phoneVerified === true || profile.data?.telegramVerified === true);
         } catch {
           setIsFullyVerified(false);
         }
@@ -65,8 +66,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(refreshedUser);
     if (refreshedUser) {
       try {
-        const profile = await api.get<{ phoneVerified?: boolean } | null>("/profile");
-        setIsFullyVerified(Boolean(refreshedUser.emailVerified || profile.data?.phoneVerified === true));
+        const profile = await api.get<{ phoneVerified?: boolean; telegramVerified?: boolean } | null>("/profile");
+        setIsFullyVerified(Boolean(refreshedUser.emailVerified || profile.data?.phoneVerified === true || profile.data?.telegramVerified === true));
       } catch {
         setIsFullyVerified(false);
       }
@@ -105,13 +106,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signInWithPopup(auth, googleProvider);
   };
 
+  const loginWithTelegram = useCallback(async (data: Record<string, unknown>) => {
+    const response = await api.post<{ customToken: string }>("/auth/telegram", data);
+    const { signInWithCustomToken } = await import("firebase/auth");
+    await signInWithCustomToken(auth, response.data.customToken);
+  }, []);
+
   const logout = async () => {
     await signOut(auth);
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, isAdmin, loading, isFullyVerified, refreshUser, savePhoneNumber, sendVerificationEmail, login, signup, loginWithGoogle, logout }}
+      value={{ user, isAdmin, loading, isFullyVerified, refreshUser, savePhoneNumber, sendVerificationEmail, login, signup, loginWithGoogle, loginWithTelegram, logout }}
     >
       {children}
     </AuthContext.Provider>
