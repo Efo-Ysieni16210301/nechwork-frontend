@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useRouteError } from "react-router-dom";
 import api from "../api/client";
 import { useAuth } from "../context/AuthContext";
 
@@ -18,6 +18,19 @@ interface Order {
 }
 
 const statuses = ["pending", "under_review", "confirmed", "processing", "shipped", "delivered", "rejected", "cancelled"];
+
+export function AdminOrdersRouteError() {
+  const error = useRouteError();
+  const detail = error instanceof Error ? error.message : "The orders page could not be loaded.";
+  return (
+    <main className="article-page">
+      <p className="eyebrow">Store management</p>
+      <h1>Orders could not be loaded</h1>
+      <p>{detail}</p>
+      <Link to="/admin/orders" className="article-back-link">Try again</Link>
+    </main>
+  );
+}
 
 export default function AdminOrdersPage() {
   const { isAdmin, loading } = useAuth();

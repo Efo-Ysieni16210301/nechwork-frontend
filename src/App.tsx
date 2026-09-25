@@ -16,7 +16,7 @@ import GalleryPage from "./pages/GalleryPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ProductAdminPage from "./pages/ProductAdminPage";
-import AdminOrdersPage from "./pages/AdminOrdersPage";
+import AdminOrdersPage, { AdminOrdersRouteError } from "./pages/AdminOrdersPage";
 import VerifyAccountPage from "./pages/VerifyAccountPage";
 import CustomerVerificationPage from "./pages/CustomerVerificationPage";
 import { mergeProducts, products as fallbackProducts } from "./data/products";
@@ -80,6 +80,7 @@ const routes = [
       {
         path: "admin/orders",
         element: <AdminOrdersPage />,
+        errorElement: <AdminOrdersRouteError />,
       },
       {
         path: "admin/customers",
