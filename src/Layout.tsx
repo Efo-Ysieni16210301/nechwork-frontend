@@ -5,6 +5,9 @@ import { company } from "./company";
 export default function Layout() {
   return (
     <>
+      <div className="announcement-bar">
+        Freshly chosen goods, delivered across Ethiopia <span>·</span> Free delivery on orders over 2,500 ETB
+      </div>
       <NavBar />
       <Outlet />
       <footer className="site-footer">

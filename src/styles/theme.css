@@ -704,3 +704,277 @@ button {
   .cart-item > strong { grid-column: 2 / -1; }
   .form-row { grid-template-columns: 1fr; }
 }
+
+/* Trade-inspired storefront polish */
+:root {
+  --bg: #f6f1e8;
+  --surface: #fffdf8;
+  --ink: #2c211b;
+  --ink-soft: #76665a;
+  --border: #ded3c6;
+  --primary: #2f211a;
+  --primary-strong: #563b2d;
+  --on-primary: #fffaf1;
+  --accent: #b5542f;
+  --accent-soft: #f1d9c8;
+}
+
+body {
+  background: var(--bg);
+  letter-spacing: -0.01em;
+}
+
+.announcement-bar {
+  background: var(--primary);
+  color: #fff9f0;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 0.55rem 1rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.announcement-bar span {
+  color: #d9a07b;
+  margin: 0 0.5rem;
+}
+
+.sidebar {
+  background: rgba(246, 241, 232, 0.96);
+  border-bottom-color: rgba(118, 102, 90, 0.22);
+  gap: 2rem;
+  padding: 1.2rem clamp(1.25rem, 4vw, 4rem);
+  position: relative;
+  z-index: 2;
+}
+
+.sidebar-brand a {
+  font-size: 1.55rem;
+  letter-spacing: -0.04em;
+}
+
+.brand-mark {
+  color: var(--accent);
+  font-size: 1.8rem;
+}
+
+.sidebar-links {
+  gap: 1.25rem;
+}
+
+.sidebar-links a {
+  color: var(--ink);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sidebar-links a.active {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+
+.sidebar-auth {
+  gap: 0.8rem;
+}
+
+.home-page,
+.shop-page,
+.gallery-page,
+.cart-page,
+.checkout-page {
+  max-width: 1280px;
+  padding-left: clamp(1.25rem, 4vw, 4rem);
+  padding-right: clamp(1.25rem, 4vw, 4rem);
+}
+
+.home-page {
+  padding-top: 2rem;
+}
+
+.home-hero {
+  gap: clamp(2rem, 6vw, 7rem);
+  min-height: 620px;
+}
+
+.home-hero h1 {
+  font-size: clamp(3.5rem, 7vw, 7.2rem);
+  letter-spacing: -0.07em;
+  line-height: 0.94;
+  max-width: 8ch;
+}
+
+.home-hero h1 em {
+  color: var(--accent);
+}
+
+.home-lead {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  max-width: 38ch;
+}
+
+.hero-image {
+  border-radius: 1.25rem 1.25rem 8rem 1.25rem;
+  height: min(620px, 58vw);
+  min-height: 430px;
+}
+
+.hero-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.hero-actions .text-link span,
+.ritual-banner .btn span {
+  margin-left: 0.35rem;
+}
+
+.btn {
+  border-radius: 999px;
+  padding: 0.85rem 1.5rem;
+}
+
+.ritual-banner {
+  align-items: center;
+  background: var(--accent);
+  border-radius: 1.25rem;
+  color: #fff8ed;
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  margin: 1rem 0 6rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.ritual-banner h2 {
+  color: #fff8ed;
+  font-size: clamp(1.7rem, 3vw, 2.8rem);
+  max-width: 18ch;
+}
+
+.ritual-banner .eyebrow {
+  color: #f8d5b9;
+}
+
+.btn-light {
+  background: #fff8ed;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.home-featured {
+  margin-top: 0;
+}
+
+.section-heading {
+  margin-bottom: 2rem;
+}
+
+.section-heading h2,
+.how-it-works > h2 {
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  letter-spacing: -0.05em;
+}
+
+.featured-grid,
+.product-grid {
+  gap: 1.5rem;
+}
+
+.featured-card,
+.product-card {
+  border: 1px solid rgba(118, 102, 90, 0.16);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.featured-card:hover,
+.product-card:hover {
+  box-shadow: 0 1rem 2.5rem rgba(73, 43, 24, 0.12);
+  transform: translateY(-3px);
+}
+
+.featured-card img {
+  height: 300px;
+}
+
+.featured-card > div {
+  padding: 1.3rem;
+}
+
+.product-image-wrap img {
+  height: 290px;
+}
+
+.product-card-body {
+  padding: 1.2rem;
+}
+
+.add-button {
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+}
+
+.how-it-works {
+  border-top: 1px solid var(--border);
+  margin-top: 7rem;
+  padding: 5rem 0 3rem;
+}
+
+.how-it-works-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 2.5rem;
+}
+
+.how-it-works-grid > div {
+  border-top: 2px solid var(--accent);
+  padding-top: 1rem;
+}
+
+.how-it-works-grid span {
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.how-it-works-grid h3 {
+  font-size: 1.35rem;
+  margin-top: 1.5rem;
+}
+
+.site-footer {
+  background: var(--primary);
+  border-top: 0;
+  color: #e8d9c8;
+  margin-top: 5rem;
+  padding: 3rem clamp(1.25rem, 4vw, 4rem);
+}
+
+.site-footer strong {
+  color: #fff8ed;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+}
+
+.site-footer a {
+  color: #f0b28f;
+}
+
+@media (max-width: 800px) {
+  .ritual-banner {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 4rem;
+  }
+
+  .how-it-works-grid {
+    grid-template-columns: 1fr;
+  }
+}
