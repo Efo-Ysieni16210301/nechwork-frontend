@@ -94,12 +94,12 @@ export default function AdminOrdersPage() {
       <div className="admin-order-list">
         {orders.map((order) => (
           <article className="admin-order-card" key={order._id}>
-            <div className="admin-order-header"><div><strong>Order {order._id.slice(-8)}</strong><span>{new Date(order.createdAt).toLocaleString()}</span></div><strong>${order.subtotal.toFixed(2)}</strong></div>
-            <p><strong>Customer:</strong> {order.email}</p>
-            <p><strong>Items:</strong> {order.items.map((item) => `${item.quantity} × ${item.name}`).join(", ")}</p>
-            <p><strong>Delivery:</strong> {order.shipping.firstName} {order.shipping.lastName}, {order.shipping.address}, {order.shipping.city}, {order.shipping.postalCode}</p>
-            <div className="admin-payment-row"><span><strong>Payment:</strong> {order.paymentMethod.toUpperCase()} · <code>{order.transactionId}</code></span><a href={order.paymentProofUrl} target="_blank" rel="noreferrer">View payment proof ↗</a></div>
-            <label className="order-status">Order status<select value={order.status} onChange={(event) => updateStatus(order._id, event.target.value)}>{statuses.map((status) => <option key={status} value={status}>{status.replace("_", " ")}</option>)}</select></label>
+            <div className="admin-order-header"><div><strong>Order {order._id?.slice(-8) || "unknown"}</strong><span>{order.createdAt ? new Date(order.createdAt).toLocaleString() : "Date unavailable"}</span></div><strong>${Number(order.subtotal || 0).toFixed(2)}</strong></div>
+            <p><strong>Customer:</strong> {order.email || "Email unavailable"}</p>
+            <p><strong>Items:</strong> {(order.items || []).map((item) => `${item.quantity} × ${item.name}`).join(", ") || "Items unavailable"}</p>
+            <p><strong>Delivery:</strong> {order.shipping ? `${order.shipping.firstName} ${order.shipping.lastName}, ${order.shipping.address}, ${order.shipping.city}, ${order.shipping.postalCode}` : "Delivery details unavailable"}</p>
+            <div className="admin-payment-row"><span><strong>Payment:</strong> {order.paymentMethod?.toUpperCase() || "NOT PROVIDED"} · <code>{order.transactionId || "No transaction ID"}</code></span>{order.paymentProofUrl ? <a href={order.paymentProofUrl} target="_blank" rel="noreferrer">View payment proof ↗</a> : <span>No payment proof</span>}</div>
+            <label className="order-status">Order status<select value={order.status || "pending"} onChange={(event) => updateStatus(order._id, event.target.value)}>{statuses.map((status) => <option key={status} value={status}>{status.replace("_", " ")}</option>)}</select></label>
           </article>
         ))}
       </div>
