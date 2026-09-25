@@ -99,6 +99,44 @@ a:hover {
   text-decoration: underline;
 }
 
+.customer-order-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.customer-order-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 1.25rem;
+}
+
+.customer-order-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.customer-order-heading div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.customer-order-heading span {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.order-status-badge {
+  display: inline-block;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 0.25rem 0.7rem;
+  font-weight: 600;
+}
+
 button {
   font-family: var(--font-body);
 }

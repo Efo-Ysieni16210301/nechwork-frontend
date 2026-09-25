@@ -45,6 +45,7 @@ export default function NavBar() {
             <li><NavLink to="/admin/customers">Customers</NavLink></li>
           </>
         )}
+        {user && !isAdmin && <li><NavLink to="/orders">My orders</NavLink></li>}
       </ul>
 
       <div className="sidebar-auth">
