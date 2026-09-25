@@ -2,12 +2,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useCart } from "../context/CartContext";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function NavBar() {
   const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { itemCount } = useCart();
+  const { t, toggleLanguage, language } = useLanguage();
 
   const handleLogout = async () => {
     await logout();
@@ -22,34 +24,35 @@ export default function NavBar() {
       <ul className="sidebar-links">
         <li>
           <NavLink to="/" end>
-            Home
+            {t("home")}
           </NavLink>
         </li>
         <li>
-          <NavLink to="/shop">Shop</NavLink>
+          <NavLink to="/shop">{t("shop")}</NavLink>
         </li>
         <li>
-          <NavLink to="/gallery">Gallery</NavLink>
+          <NavLink to="/gallery">{t("gallery")}</NavLink>
         </li>
         <li>
-          <NavLink to="/articles">Articles</NavLink>
+          <NavLink to="/articles">{t("articles")}</NavLink>
         </li>
         <li>
-          <NavLink to="/about">About</NavLink>
+          <NavLink to="/about">{t("about")}</NavLink>
         </li>
         {isAdmin && (
           <>
-            <li><NavLink to="/admin">Admin</NavLink></li>
-            <li><NavLink to="/admin/products">Products</NavLink></li>
-            <li><NavLink to="/admin/orders">Orders</NavLink></li>
-            <li><NavLink to="/admin/customers">Customers</NavLink></li>
+            <li><NavLink to="/admin">{t("admin")}</NavLink></li>
+            <li><NavLink to="/admin/products">{t("products")}</NavLink></li>
+            <li><NavLink to="/admin/orders">{t("orders")}</NavLink></li>
+            <li><NavLink to="/admin/customers">{t("customers")}</NavLink></li>
           </>
         )}
-        {user && !isAdmin && <li><NavLink to="/orders">My orders</NavLink></li>}
+        {user && !isAdmin && <li><NavLink to="/orders">{t("myOrders")}</NavLink></li>}
       </ul>
 
       <div className="sidebar-auth">
-        <NavLink to="/cart" className="cart-link">Bag <span>{itemCount}</span></NavLink>
+        <NavLink to="/cart" className="cart-link">{t("bag")} <span>{itemCount}</span></NavLink>
+        <button type="button" className="language-toggle" onClick={toggleLanguage} aria-label={language === "en" ? "Switch to Amharic" : "Switch to English"}>{t("language")}</button>
         <button
           type="button"
           className="theme-toggle"
@@ -64,13 +67,13 @@ export default function NavBar() {
           <>
             <span className="sidebar-user">{user.email}</span>
             <button onClick={handleLogout} className="sidebar-logout">
-              Log out
+              {t("logout")}
             </button>
           </>
         ) : (
           <>
-            <NavLink to="/login" className="sidebar-login-link">Log in</NavLink>
-            <NavLink to="/signup" className="btn btn-primary nav-signup">Sign up</NavLink>
+            <NavLink to="/login" className="sidebar-login-link">{t("login")}</NavLink>
+            <NavLink to="/signup" className="btn btn-primary nav-signup">{t("signup")}</NavLink>
           </>
         )}
       </div>

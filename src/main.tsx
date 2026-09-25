@@ -6,14 +6,17 @@ import App from "./App.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
 import { CartProvider } from "./context/CartContext.tsx";
+import { LanguageProvider } from "./context/LanguageContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
       <ThemeProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
+        <LanguageProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </AuthProvider>
   </StrictMode>,

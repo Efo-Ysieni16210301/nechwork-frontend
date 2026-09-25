@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 
 interface CustomerOrder {
   _id: string;
@@ -15,19 +16,9 @@ interface CustomerOrder {
   createdAt?: string;
 }
 
-const statusLabels: Record<string, string> = {
-  pending: "Payment pending review",
-  under_review: "Under review",
-  confirmed: "Payment confirmed",
-  processing: "Being prepared",
-  shipped: "Shipped",
-  delivered: "Delivered",
-  rejected: "Rejected",
-  cancelled: "Cancelled",
-};
-
 export default function CustomerOrdersPage() {
   const { user, loading } = useAuth();
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,25 +30,25 @@ export default function CustomerOrdersPage() {
       .then((response) => setOrders(response.data))
       .catch((requestError) => {
         const response = (requestError as { response?: { data?: { error?: string } } }).response;
-        setError(response?.data?.error || "Could not load your orders.");
+        setError(response?.data?.error || t("couldNotLoadOrders"));
       })
       .finally(() => setLoadingOrders(false));
-  }, [loading, user]);
+  }, [loading, t, user]);
 
-  if (loading) return <main className="article-page"><p>Loading...</p></main>;
+  if (loading) return <main className="article-page"><p>{t("loading")}</p></main>;
   if (!user) {
-    return <main className="article-page"><h1>Sign in to view your orders</h1><Link to="/login">Log in</Link></main>;
+    return <main className="article-page"><h1>{t("signInOrders")}</h1><Link to="/login">{t("login")}</Link></main>;
   }
 
   return (
     <main className="article-page customer-orders-page">
-      <p className="eyebrow">Your account</p>
-      <h1>My orders</h1>
-      <p>Track payment review, preparation, shipping, and delivery updates for your purchases.</p>
-      {loadingOrders && <p>Loading your orders...</p>}
+      <p className="eyebrow">{t("yourAccount")}</p>
+      <h1>{t("myOrdersTitle")}</h1>
+      <p>{t("trackOrders")}</p>
+      {loadingOrders && <p>{t("loadingOrders")}</p>}
       {error && <p className="comment-error">{error}</p>}
       {!loadingOrders && !error && !orders.length && (
-        <p>You have no orders yet. <Link to="/shop">Browse the shop</Link></p>
+        <p>{t("noOrders")} <Link to="/shop">{t("browseShop")}</Link></p>
       )}
       <div className="customer-order-list">
         {orders.map((order) => {
@@ -67,14 +58,18 @@ export default function CustomerOrdersPage() {
               <div className="customer-order-heading">
                 <div>
                   <strong>Order {order._id?.slice(-8) || "unknown"}</strong>
-                  <span>{order.createdAt ? new Date(order.createdAt).toLocaleString() : "Date unavailable"}</span>
+                  <span>{order.createdAt ? new Date(order.createdAt).toLocaleString() : t("dateUnavailable")}</span>
                 </div>
                 <strong>${Number(order.subtotal || 0).toFixed(2)}</strong>
               </div>
-              <p className="order-status-badge">{statusLabels[status] || status.replaceAll("_", " ")}</p>
-              <p><strong>Items:</strong> {(order.items || []).map((item) => `${item.quantity || 0} × ${item.name || "Product"}`).join(", ") || "Items unavailable"}</p>
-              <p><strong>Payment:</strong> {order.paymentMethod?.toUpperCase() || "Not provided"} · Transaction: {order.transactionId || "Not provided"}</p>
-              {order.paymentProofUrl && <a href={order.paymentProofUrl} target="_blank" rel="noreferrer">View submitted payment proof ↗</a>}
+              <p className="order-status-badge">{({
+                pending: t("paymentPending"), under_review: t("underReview"), confirmed: t("paymentConfirmed"),
+                processing: t("beingPrepared"), shipped: t("shipped"), delivered: t("delivered"),
+                rejected: t("rejected"), cancelled: t("cancelled"),
+              } as Record<string, string>)[status] || status.replaceAll("_", " ")}</p>
+              <p><strong>{t("items")}:</strong> {(order.items || []).map((item) => `${item.quantity || 0} × ${item.name || "Product"}`).join(", ") || t("itemsUnavailable")}</p>
+              <p><strong>{t("payment")}:</strong> {order.paymentMethod?.toUpperCase() || t("notProvided")} · {t("transaction")}: {order.transactionId || t("notProvided")}</p>
+              {order.paymentProofUrl && <a href={order.paymentProofUrl} target="_blank" rel="noreferrer">{t("viewProof")}</a>}
             </article>
           );
         })}
