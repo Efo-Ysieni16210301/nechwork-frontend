@@ -28,11 +28,38 @@ environment and redeploy after changing them:
 - `VITE_API_URL`: the Render API URL ending in `/api`
 - `VITE_CLOUDINARY_CLOUD_NAME`: the Cloudinary cloud name
 - `VITE_CLOUDINARY_UPLOAD_PRESET`: an unsigned upload preset
+- `VITE_TELEGRAM_BOT_USERNAME`: the Telegram bot username without `@`
 
 The backend must be deployed separately on Render with `MONGO_URI`,
 `FIREBASE_SERVICE_ACCOUNT_KEY`, `FRONTEND_URL` set to the Vercel origin, and
-`PORT` supplied by Render or left unset. Do not put the Firebase service
+`TELEGRAM_BOT_TOKEN` set to the BotFather token. `PORT` is supplied by Render
+or can be left unset. Do not put the Firebase service
 account key or a Cloudinary API secret in frontend variables.
+
+For Telegram redirect login, use matching production values:
+
+```env
+# Vercel
+VITE_API_URL=https://nechwork-backend-16210301.onrender.com/api
+VITE_TELEGRAM_BOT_USERNAME=NechworkBot
+
+# Render
+FRONTEND_URL=https://nechwork-frontend.vercel.app
+TELEGRAM_BOT_TOKEN=your-secret-botfather-token
+```
+
+Register only the Vercel hostname with BotFather using `/setdomain`:
+`nechwork-frontend.vercel.app`. Do not include the protocol, path, or `/api`.
+
+The Telegram widget callback for this deployment is:
+
+```text
+https://nechwork-backend-16210301.onrender.com/api/auth/telegram
+```
+
+The login component uses these production values as safe fallbacks, so the
+widget does not render a placeholder bot name or placeholder backend URL when
+deployment variables are missing.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

@@ -9,8 +9,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const telegramBot = import.meta.env.VITE_TELEGRAM_BOT_USERNAME;
-  const telegramAuthUrl = `${import.meta.env.VITE_API_URL || "http://localhost:8000/api"}/auth/telegram`;
+  const telegramBot = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || "NechworkBot";
+  const telegramAuthUrl = `${import.meta.env.VITE_API_URL || "https://nechwork-backend-16210301.onrender.com/api"}/auth/telegram`;
   useEffect(() => {
     if (!telegramBot) return;
     const telegramToken = new URLSearchParams(window.location.hash.slice(1)).get("telegram_token");
