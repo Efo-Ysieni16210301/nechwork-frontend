@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useCart } from "../context/CartContext";
@@ -12,6 +12,8 @@ export default function NavBar() {
   const { itemCount } = useCart();
   const { t, toggleLanguage, language } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
+  const shopMenuRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
     await logout();
@@ -19,6 +21,23 @@ export default function NavBar() {
   };
 
   const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (shopMenuRef.current && !shopMenuRef.current.contains(event.target as Node)) {
+        setShopOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShopOpen(false);
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <nav className={`sidebar ${menuOpen ? "menu-open" : ""}`}>
@@ -47,22 +66,30 @@ export default function NavBar() {
           </NavLink>
         </li>
         <li>
-          <div className="shop-nav-item">
-            <NavLink to="/shop" onClick={closeMenu}>{t("shop")}</NavLink>
+          <div className={`shop-nav-item ${shopOpen ? "shop-open" : ""}`} ref={shopMenuRef}>
+            <button
+              type="button"
+              className="shop-menu-trigger"
+              aria-expanded={shopOpen}
+              aria-haspopup="true"
+              onClick={() => setShopOpen((open) => !open)}
+            >
+              {t("shop")} <span aria-hidden="true">⌄</span>
+            </button>
             <div className="shop-mega-menu">
               <div className="mega-menu-links">
-                <span>Shop all</span>
-                <Link to="/shop" onClick={closeMenu}>Build your collection</Link>
-                <Link to="/shop?category=Coffee" onClick={closeMenu}>Browse coffee</Link>
-                <Link to="/shop?category=Tea" onClick={closeMenu}>Browse tea</Link>
-                <Link to="/shop?category=Home%20%26%20gifts" onClick={closeMenu}>Gifts for good mornings</Link>
+                <Link className="mega-menu-heading-link" to="/shop" onClick={() => { closeMenu(); setShopOpen(false); }}>Shop all</Link>
+                <Link to="/shop" onClick={() => { closeMenu(); setShopOpen(false); }}>Build your collection</Link>
+                <Link to="/shop?category=Coffee" onClick={() => { closeMenu(); setShopOpen(false); }}>Browse coffee</Link>
+                <Link to="/shop?category=Tea" onClick={() => { closeMenu(); setShopOpen(false); }}>Browse tea</Link>
+                <Link to="/shop?category=Home%20%26%20gifts" onClick={() => { closeMenu(); setShopOpen(false); }}>Gifts for good mornings</Link>
               </div>
-              <Link className="mega-menu-card" to="/shop?category=Coffee" onClick={closeMenu}>
+              <Link className="mega-menu-card" to="/shop?category=Coffee" onClick={() => { closeMenu(); setShopOpen(false); }}>
                 <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=85" alt="" />
                 <strong>Find your everyday cup</strong>
                 <span>Explore coffee →</span>
               </Link>
-              <Link className="mega-menu-card" to="/gallery" onClick={closeMenu}>
+              <Link className="mega-menu-card" to="/gallery" onClick={() => { closeMenu(); setShopOpen(false); }}>
                 <img src="https://images.unsplash.com/photo-1522120573867-e574959f84c8?auto=format&fit=crop&w=700&q=85" alt="" />
                 <strong>Made with intention</strong>
                 <span>See our world →</span>
