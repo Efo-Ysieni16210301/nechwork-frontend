@@ -69,14 +69,14 @@ export default function VerifyAccountPage() {
     <main className="auth-page verification-page">
       <p className="eyebrow">Account security</p>
       <h1>Verify your account</h1>
-      <p>Verify your email and submit a phone number. An administrator will manually confirm the phone number because SMS verification is not available on this project.</p>
+      <p>Choose one verification method. You can verify your email, or submit a phone number for manual administrator approval. You do not need to complete both.</p>
       <section className="verification-card">
         <h2>Email verification</h2>
         <p className={user.emailVerified ? "verification-ok" : ""}>{user.emailVerified ? "✓ Email verified" : `Verify the link sent to ${user.email}.`}</p>
         {!user.emailVerified && <><button className="comment-submit" onClick={resendEmail}>Resend email</button><button className="comment-link-btn" onClick={refreshEmail}>I verified my email</button></>}
       </section>
       <section className="verification-card">
-        <h2>Phone number</h2>
+        <h2>Phone number (alternative)</h2>
         <form onSubmit={savePhone}>
           <label>Phone number<input type="tel" placeholder="+251912345678" value={phone} onChange={(event) => setPhone(event.target.value)} required /></label>
           <button className="comment-submit" type="submit">Submit for manual approval</button>

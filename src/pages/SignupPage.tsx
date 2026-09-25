@@ -9,6 +9,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [verificationMethod, setVerificationMethod] = useState<"email" | "phone">("email");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -18,7 +19,9 @@ export default function SignupPage() {
     setSubmitting(true);
     try {
       await signup(email, password);
-      await api.put("/profile", { phoneNumber });
+      if (verificationMethod === "phone") {
+        await api.put("/profile", { phoneNumber });
+      }
       navigate("/verify-account");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Unable to create account.");
@@ -41,13 +44,18 @@ export default function SignupPage() {
     <div className="auth-page">
       <h1>Sign up</h1>
       <form onSubmit={handleSubmit} className="auth-form">
+        <fieldset>
+          <legend>Choose one verification method</legend>
+          <label><input type="radio" name="verificationMethod" checked={verificationMethod === "email"} onChange={() => setVerificationMethod("email")} /> Email verification</label>
+          <label><input type="radio" name="verificationMethod" checked={verificationMethod === "phone"} onChange={() => setVerificationMethod("phone")} /> Phone verification by manual approval</label>
+        </fieldset>
         <input
           type="tel"
           placeholder="Phone number (+251912345678)"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           className="comment-input"
-          required
+          required={verificationMethod === "phone"}
         />
         <input
           type="email"

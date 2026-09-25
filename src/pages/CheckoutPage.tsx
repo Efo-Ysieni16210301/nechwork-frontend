@@ -65,7 +65,7 @@ export default function CheckoutPage() {
     <main className="checkout-page">
       <p className="eyebrow">Checkout</p>
       <h1>Almost yours.</h1>
-      {user && !isFullyVerified && <p className="comment-error">Please complete <Link to="/verify-account">email and phone verification</Link> before ordering.</p>}
+      {user && !isFullyVerified && <p className="comment-error">Please complete <Link to="/verify-account">email verification or phone approval</Link> before ordering.</p>}
       {!user && <p className="comment-error">Please <Link to="/login">log in</Link> before placing an order.</p>}
       <form className="checkout-layout" onSubmit={async (event) => {
         event.preventDefault();
@@ -89,7 +89,8 @@ export default function CheckoutPage() {
           clearCart();
           setPlaced(true);
         } catch (requestError) {
-          setError(requestError instanceof Error ? requestError.message : "Unable to submit your order.");
+          const response = (requestError as { response?: { data?: { error?: string } } }).response;
+          setError(response?.data?.error || (requestError instanceof Error ? requestError.message : "Unable to submit your order."));
         }
       }}>
         <section className="checkout-form">

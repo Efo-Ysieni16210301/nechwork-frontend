@@ -40,11 +40,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(firebaseUser);
 
       if (firebaseUser) {
-        const tokenResult = await firebaseUser.getIdTokenResult();
+        const tokenResult = await firebaseUser.getIdTokenResult(true);
         setIsAdmin(tokenResult.claims.admin === true);
         try {
           const profile = await api.get<{ phoneVerified?: boolean } | null>("/profile");
-          setIsFullyVerified(firebaseUser.emailVerified && profile.data?.phoneVerified === true);
+          setIsFullyVerified(firebaseUser.emailVerified || profile.data?.phoneVerified === true);
         } catch {
           setIsFullyVerified(false);
         }
@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (refreshedUser) {
       try {
         const profile = await api.get<{ phoneVerified?: boolean } | null>("/profile");
-        setIsFullyVerified(Boolean(refreshedUser.emailVerified && profile.data?.phoneVerified === true));
+        setIsFullyVerified(Boolean(refreshedUser.emailVerified || profile.data?.phoneVerified === true));
       } catch {
         setIsFullyVerified(false);
       }
