@@ -39,7 +39,21 @@ export default function VerifyAccountPage() {
       setConfirmation(result);
       setMessage("A verification code was sent to your phone.");
     } catch (verificationError) {
-      setError(verificationError instanceof Error ? verificationError.message : "Could not send phone code.");
+      const errorCode =
+        typeof verificationError === "object" &&
+        verificationError !== null &&
+        "code" in verificationError
+          ? String((verificationError as { code?: unknown }).code)
+          : "";
+      setError(
+        errorCode === "auth/billing-not-enabled"
+          ? "Phone verification requires billing to be enabled for this Firebase project. The site administrator must upgrade the project to the Blaze plan and link a billing account."
+          : errorCode === "auth/operation-not-allowed"
+            ? "Phone verification is disabled for this region. The site administrator must enable Ethiopia (+251) in Firebase Authentication SMS region policy."
+          : verificationError instanceof Error
+            ? verificationError.message
+            : "Could not send phone code.",
+      );
     }
   };
   const verifyCode = async () => {
