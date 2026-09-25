@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { Product } from "../data/products";
@@ -24,12 +26,11 @@ const storageKey = "shop-cart";
 export function CartProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
   const [items, setItems] = useState<CartItem[]>([]);
-  const [cartLoaded, setCartLoaded] = useState(false);
   const userStorageKey = user ? `${storageKey}:${user.uid}` : `${storageKey}:guest`;
 
   useEffect(() => {
     if (authLoading) return;
-    setCartLoaded(false);
+
     const saved = localStorage.getItem(userStorageKey);
     try {
       setItems(saved ? (JSON.parse(saved) as CartItem[]) : []);
@@ -37,12 +38,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem(userStorageKey);
       setItems([]);
     }
-    setCartLoaded(true);
   }, [authLoading, userStorageKey]);
 
   useEffect(() => {
-    if (cartLoaded) localStorage.setItem(userStorageKey, JSON.stringify(items));
-  }, [cartLoaded, items, userStorageKey]);
+    if (authLoading) return;
+    localStorage.setItem(userStorageKey, JSON.stringify(items));
+  }, [authLoading, items, userStorageKey]);
 
   const value = useMemo<CartContextValue>(() => ({
     items,

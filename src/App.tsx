@@ -17,6 +17,7 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ProductAdminPage from "./pages/ProductAdminPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
+import VerifyAccountPage from "./pages/VerifyAccountPage";
 
 const routes = [
   {
@@ -39,6 +40,7 @@ const routes = [
       { path: "about", element: <AboutPage /> },
       { path: "login", element: <LoginPage /> },
       { path: "signup", element: <SignupPage /> },
+      { path: "verify-account", element: <VerifyAccountPage /> },
       {
         path: "articles",
         element: <ArticlesList />,

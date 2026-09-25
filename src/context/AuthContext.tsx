@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import {
@@ -6,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  sendEmailVerification,
 } from "firebase/auth";
 import type { User } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
@@ -14,6 +16,9 @@ interface AuthContextType {
   user: User | null;
   isAdmin: boolean;
   loading: boolean;
+  isFullyVerified: boolean;
+  refreshUser: () => Promise<void>;
+  sendVerificationEmail: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
@@ -26,6 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isFullyVerified, setIsFullyVerified] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -34,14 +40,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (firebaseUser) {
         const tokenResult = await firebaseUser.getIdTokenResult();
         setIsAdmin(tokenResult.claims.admin === true);
+        setIsFullyVerified(firebaseUser.emailVerified && Boolean(firebaseUser.phoneNumber));
       } else {
         setIsAdmin(false);
+        setIsFullyVerified(false);
       }
 
       setLoading(false);
     });
     return unsubscribe;
   }, []);
+
+  const refreshUser = async () => {
+    if (!auth.currentUser) return;
+    await auth.currentUser.reload();
+    const refreshedUser = auth.currentUser;
+    setUser(refreshedUser);
+    setIsFullyVerified(Boolean(refreshedUser?.emailVerified && refreshedUser.phoneNumber));
+  };
+
+  const sendVerificationEmail = async () => {
+    if (!auth.currentUser) throw new Error("You must be signed in.");
+    await sendEmailVerification(auth.currentUser);
+  };
 
   const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
@@ -61,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAdmin, loading, login, signup, loginWithGoogle, logout }}
+      value={{ user, isAdmin, loading, isFullyVerified, refreshUser, sendVerificationEmail, login, signup, loginWithGoogle, logout }}
     >
       {children}
     </AuthContext.Provider>

@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage() {
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, user, isFullyVerified } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,9 +15,9 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       await login(email, password);
-      navigate("/articles");
-    } catch (err: any) {
-      setError(err.message);
+      navigate(user && isFullyVerified ? "/shop" : "/verify-account");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Unable to log in.");
     } finally {
       setSubmitting(false);
     }
@@ -26,9 +26,9 @@ export default function LoginPage() {
     setError(null);
     try {
       await loginWithGoogle();
-      navigate("/articles");
-    } catch (err: any) {
-      setError(err.message);
+      navigate(user && isFullyVerified ? "/shop" : "/verify-account");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Google sign-in failed.");
     }
   };
 

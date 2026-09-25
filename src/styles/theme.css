@@ -585,6 +585,12 @@ button {
 .payment-option span { grid-area: content; display: grid; gap: .15rem; }
 .payment-option small, .checkout-form small { color: var(--ink-soft); font-size: .75rem; }
 .confirmation-mark { display: inline-grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--primary); color: var(--on-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
+.verification-page { max-width: 640px; }
+.verification-card { display: grid; gap: .75rem; margin-top: 1.25rem; padding: 1.25rem; border: 1px solid var(--border); background: var(--surface); }
+.verification-card h2 { margin: 0; font-size: 1.2rem; }
+.verification-card label { display: grid; gap: .35rem; color: var(--ink-soft); font-size: .85rem; }
+.verification-card input { width: 100%; padding: .75rem; border: 1px solid var(--border); background: var(--surface); color: var(--ink); font: inherit; }
+.verification-ok { color: var(--primary); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 @media (max-width: 800px) {
   .home-hero, .cart-layout, .checkout-layout { grid-template-columns: 1fr; gap: 2rem; }

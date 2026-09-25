@@ -20,6 +20,20 @@ The upload flow validates image type and size in the browser, uploads the
 selected file to Cloudinary, then saves the returned secure image URL with the
 product through the backend API.
 
+## Deployment
+
+For Vercel, configure these environment variables for the production
+environment and redeploy after changing them:
+
+- `VITE_API_URL`: the Render API URL ending in `/api`
+- `VITE_CLOUDINARY_CLOUD_NAME`: the Cloudinary cloud name
+- `VITE_CLOUDINARY_UPLOAD_PRESET`: an unsigned upload preset
+
+The backend must be deployed separately on Render with `MONGO_URI`,
+`FIREBASE_SERVICE_ACCOUNT_KEY`, `FRONTEND_URL` set to the Vercel origin, and
+`PORT` supplied by Render or left unset. Do not put the Firebase service
+account key or a Cloudinary API secret in frontend variables.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

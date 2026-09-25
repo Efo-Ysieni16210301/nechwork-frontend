@@ -16,9 +16,9 @@ export default function SignupPage() {
     setSubmitting(true);
     try {
       await signup(email, password);
-      navigate("/articles");
-    } catch (err: any) {
-      setError(err.message);
+      navigate("/verify-account");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Unable to create account.");
     } finally {
       setSubmitting(false);
     }
@@ -28,9 +28,9 @@ export default function SignupPage() {
     setError(null);
     try {
       await loginWithGoogle();
-      navigate("/articles");
-    } catch (err: any) {
-      setError(err.message);
+      navigate("/verify-account");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Google sign-up failed.");
     }
   };
 

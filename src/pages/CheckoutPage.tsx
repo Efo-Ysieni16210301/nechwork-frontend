@@ -15,7 +15,7 @@ const paymentMethods: { value: PaymentMethod; label: string; details: string }[]
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
-  const { user } = useAuth();
+  const { user, isFullyVerified } = useAuth();
   const [placed, setPlaced] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("telebirr");
   const [proofUrl, setProofUrl] = useState("");
@@ -65,10 +65,11 @@ export default function CheckoutPage() {
     <main className="checkout-page">
       <p className="eyebrow">Checkout</p>
       <h1>Almost yours.</h1>
+      {user && !isFullyVerified && <p className="comment-error">Please complete <Link to="/verify-account">email and phone verification</Link> before ordering.</p>}
       {!user && <p className="comment-error">Please <Link to="/login">log in</Link> before placing an order.</p>}
       <form className="checkout-layout" onSubmit={async (event) => {
         event.preventDefault();
-        if (!user || !proofUrl) return;
+        if (!user || !isFullyVerified || !proofUrl) return;
         setError(null);
         const form = new FormData(event.currentTarget);
         try {
@@ -103,7 +104,7 @@ export default function CheckoutPage() {
           <label>Transaction ID<input name="transactionId" required placeholder="Enter the payment transaction/reference ID" /></label>
           <label>Payment proof <input type="file" accept=".pdf,image/png,image/jpeg,image/webp" onChange={uploadProof} disabled={uploadingProof} required={!proofUrl} /><small>{uploadingProof ? "Uploading proof..." : proofUrl ? "Payment proof uploaded." : "PDF, PNG, JPG, or WebP up to 10 MB."}</small></label>
           {error && <p className="comment-error">{error}</p>}
-          <button className="btn btn-primary" type="submit" disabled={!user || !proofUrl || uploadingProof}>Submit order for review · ${subtotal.toFixed(2)}</button>
+          <button className="btn btn-primary" type="submit" disabled={!user || !isFullyVerified || !proofUrl || uploadingProof}>Submit order for review · ${subtotal.toFixed(2)}</button>
         </section>
         <aside className="order-summary checkout-summary"><h2>In your bag</h2>{items.map(({ product, quantity }) => <div className="checkout-product" key={product.id}><span>{quantity} × {product.name}</span><strong>${(product.price * quantity).toFixed(2)}</strong></div>)}<div className="summary-total"><span>Total</span><strong>${subtotal.toFixed(2)}</strong></div></aside>
       </form>

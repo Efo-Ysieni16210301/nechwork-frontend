@@ -13,7 +13,7 @@ export default function ShopPage() {
     const matchesCategory = category === "All" || product.category === category;
     const matchesSearch = `${product.name} ${product.description}`.toLowerCase().includes(query.toLowerCase());
     return matchesCategory && matchesSearch;
-  }), [category, query]);
+  }), [category, products, query]);
 
   return (
     <main className="shop-page">

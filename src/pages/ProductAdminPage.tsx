@@ -128,10 +128,8 @@ export default function ProductAdminPage() {
       setEditingId(null);
       revalidator.revalidate();
     } catch (requestError) {
-      setError(
-        (requestError as { response?: { data?: { error?: string } } }).response
-          ?.data?.error ||           editingId ? "Could not update product." : "Could not create product.",
-      );
+      const message = (requestError as { response?: { data?: { error?: string } } }).response?.data?.error;
+      setError(message || (editingId ? "Could not update product." : "Could not create product."));
     } finally {
       setSubmitting(false);
     }
