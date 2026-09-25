@@ -25,6 +25,7 @@ interface AuthContextType {
   signup: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   loginWithTelegram: (data: Record<string, unknown>) => Promise<void>;
+  loginWithTelegramToken: (token: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -112,13 +113,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signInWithCustomToken(auth, response.data.customToken);
   }, []);
 
+  const loginWithTelegramToken = useCallback(async (token: string) => {
+    const { signInWithCustomToken } = await import("firebase/auth");
+    await signInWithCustomToken(auth, token);
+  }, []);
+
   const logout = async () => {
     await signOut(auth);
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, isAdmin, loading, isFullyVerified, refreshUser, savePhoneNumber, sendVerificationEmail, login, signup, loginWithGoogle, loginWithTelegram, logout }}
+      value={{ user, isAdmin, loading, isFullyVerified, refreshUser, savePhoneNumber, sendVerificationEmail, login, signup, loginWithGoogle, loginWithTelegram, loginWithTelegramToken, logout }}
     >
       {children}
     </AuthContext.Provider>

@@ -2,41 +2,36 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-declare global {
-  interface Window {
-    nechWorkTelegramLogin?: (data: Record<string, unknown>) => void;
-  }
-}
-
 export default function LoginPage() {
-  const { login, loginWithGoogle, loginWithTelegram, user, isFullyVerified } = useAuth();
+  const { login, loginWithGoogle, loginWithTelegramToken, user, isFullyVerified } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const telegramBot = import.meta.env.VITE_TELEGRAM_BOT_USERNAME;
+  const telegramAuthUrl = `${import.meta.env.VITE_API_URL || "http://localhost:8000/api"}/auth/telegram`;
   useEffect(() => {
     if (!telegramBot) return;
-    window.nechWorkTelegramLogin = (data: Record<string, unknown>) => {
-      void loginWithTelegram(data).then(() => navigate("/shop")).catch((err: unknown) => {
+    const telegramToken = new URLSearchParams(window.location.hash.slice(1)).get("telegram_token");
+    if (telegramToken) {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      void loginWithTelegramToken(telegramToken).then(() => navigate("/shop")).catch((err: unknown) => {
         setError(err instanceof Error ? err.message : "Telegram sign-in failed.");
       });
-    };
+      return;
+    }
     const script = document.createElement("script");
     script.src = "https://telegram.org/js/telegram-widget.js?22";
     script.async = true;
     script.setAttribute("data-telegram-login", telegramBot);
     script.setAttribute("data-size", "large");
-    script.setAttribute("data-radius", "8");
-    script.setAttribute("data-request-access", "write");
-    script.setAttribute("data-onauth", "nechWorkTelegramLogin(user)");
+    script.setAttribute("data-auth-url", telegramAuthUrl);
     document.getElementById("telegram-login")?.appendChild(script);
     return () => {
-      delete window.nechWorkTelegramLogin;
       script.remove();
     };
-  }, [loginWithTelegram, navigate, telegramBot]);
+  }, [loginWithTelegramToken, navigate, telegramAuthUrl, telegramBot]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
