@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import api from "../api/client";
 
 export default function SignupPage() {
   const { signup, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -16,6 +18,7 @@ export default function SignupPage() {
     setSubmitting(true);
     try {
       await signup(email, password);
+      await api.put("/profile", { phoneNumber });
       navigate("/verify-account");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Unable to create account.");
@@ -38,6 +41,14 @@ export default function SignupPage() {
     <div className="auth-page">
       <h1>Sign up</h1>
       <form onSubmit={handleSubmit} className="auth-form">
+        <input
+          type="tel"
+          placeholder="Phone number (+251912345678)"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          className="comment-input"
+          required
+        />
         <input
           type="email"
           placeholder="Email"

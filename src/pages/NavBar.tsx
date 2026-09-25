@@ -42,6 +42,7 @@ export default function NavBar() {
             <li><NavLink to="/admin">Admin</NavLink></li>
             <li><NavLink to="/admin/products">Products</NavLink></li>
             <li><NavLink to="/admin/orders">Orders</NavLink></li>
+            <li><NavLink to="/admin/customers">Customers</NavLink></li>
           </>
         )}
       </ul>

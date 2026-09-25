@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import type { User } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
+import api from "../api/client";
 
 interface AuthContextType {
   user: User | null;
@@ -18,6 +19,7 @@ interface AuthContextType {
   loading: boolean;
   isFullyVerified: boolean;
   refreshUser: () => Promise<void>;
+  savePhoneNumber: (phoneNumber: string) => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
@@ -40,7 +42,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (firebaseUser) {
         const tokenResult = await firebaseUser.getIdTokenResult();
         setIsAdmin(tokenResult.claims.admin === true);
-        setIsFullyVerified(firebaseUser.emailVerified && Boolean(firebaseUser.phoneNumber));
+        try {
+          const profile = await api.get<{ phoneVerified?: boolean } | null>("/profile");
+          setIsFullyVerified(firebaseUser.emailVerified && profile.data?.phoneVerified === true);
+        } catch {
+          setIsFullyVerified(false);
+        }
       } else {
         setIsAdmin(false);
         setIsFullyVerified(false);
@@ -56,7 +63,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await auth.currentUser.reload();
     const refreshedUser = auth.currentUser;
     setUser(refreshedUser);
-    setIsFullyVerified(Boolean(refreshedUser?.emailVerified && refreshedUser.phoneNumber));
+    if (refreshedUser) {
+      try {
+        const profile = await api.get<{ phoneVerified?: boolean } | null>("/profile");
+        setIsFullyVerified(Boolean(refreshedUser.emailVerified && profile.data?.phoneVerified === true));
+      } catch {
+        setIsFullyVerified(false);
+      }
+    } else {
+      setIsFullyVerified(false);
+    }
+  };
+
+  const savePhoneNumber = async (phoneNumber: string) => {
+    await api.put("/profile", { phoneNumber });
+    await refreshUser();
   };
 
   const sendVerificationEmail = async () => {
@@ -70,6 +91,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = async (email: string, password: string) => {
     await createUserWithEmailAndPassword(auth, email, password);
+    if (auth.currentUser) {
+      await sendEmailVerification(auth.currentUser);
+    }
   };
 
   const loginWithGoogle = async () => {
@@ -82,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAdmin, loading, isFullyVerified, refreshUser, sendVerificationEmail, login, signup, loginWithGoogle, logout }}
+      value={{ user, isAdmin, loading, isFullyVerified, refreshUser, savePhoneNumber, sendVerificationEmail, login, signup, loginWithGoogle, logout }}
     >
       {children}
     </AuthContext.Provider>

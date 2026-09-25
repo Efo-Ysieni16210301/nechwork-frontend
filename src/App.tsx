@@ -18,6 +18,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import ProductAdminPage from "./pages/ProductAdminPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
 import VerifyAccountPage from "./pages/VerifyAccountPage";
+import CustomerVerificationPage from "./pages/CustomerVerificationPage";
 import { mergeProducts, products as fallbackProducts } from "./data/products";
 
 async function loadCatalog() {
@@ -79,6 +80,10 @@ const routes = [
       {
         path: "admin/orders",
         element: <AdminOrdersPage />,
+      },
+      {
+        path: "admin/customers",
+        element: <CustomerVerificationPage />,
       },
       {
         path: "articles/:name",
