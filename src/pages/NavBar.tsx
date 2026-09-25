@@ -54,6 +54,9 @@ export default function NavBar() {
               <NavLink to="/admin/categories">Categories</NavLink>
             </li>
             <li>
+              <NavLink to="/admin/gallery">Gallery manager</NavLink>
+            </li>
+            <li>
               <NavLink to="/admin/orders">{t("orders")}</NavLink>
             </li>
             <li>

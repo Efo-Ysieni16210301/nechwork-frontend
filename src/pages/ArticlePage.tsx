@@ -19,6 +19,7 @@ interface Article {
   name: string;
   title: string;
   content: string[];
+  image?: string;
   upvotes: number;
   comments: Comment[];
 }
@@ -99,6 +100,7 @@ export default function ArticlePage() {
         ← Back to articles
       </Link>
       <h1>{article.title}</h1>
+      {article.image && <img className="article-hero-image" src={article.image} alt={article.title} />}
       <div className="article-body">
         {article.content.map((paragraph, index) => (
           <p key={index}>{paragraph}</p>

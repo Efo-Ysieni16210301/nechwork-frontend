@@ -1,4 +1,7 @@
-const galleryImages = [
+import { useEffect, useState } from "react";
+import api from "../api/client";
+
+const defaultGalleryImages = [
   ["A morning ritual", "https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1000&q=85"],
   ["From the highlands", "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1000&q=85"],
   ["Made by hand", "https://images.unsplash.com/photo-1522120573867-e574959f84c8?auto=format&fit=crop&w=1000&q=85"],
@@ -7,6 +10,12 @@ const galleryImages = [
 ];
 
 export default function GalleryPage() {
+  const [galleryImages, setGalleryImages] = useState(defaultGalleryImages);
+  useEffect(() => {
+    void api.get<{ caption: string; image: string }[]>("/gallery").then((response) => {
+      setGalleryImages([...defaultGalleryImages, ...response.data.map((item) => [item.caption, item.image] as [string, string])]);
+    }).catch(() => undefined);
+  }, []);
   return (
     <main className="gallery-page">
       <div className="gallery-intro">

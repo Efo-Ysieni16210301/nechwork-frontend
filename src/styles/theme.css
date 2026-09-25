@@ -370,6 +370,42 @@ button {
   line-height: 1.75;
 }
 
+.article-hero-image {
+  width: 100%;
+  max-height: 28rem;
+  object-fit: cover;
+  border-radius: 1rem;
+  margin: 1rem 0 2rem;
+}
+
+.article-image-preview {
+  max-width: 20rem;
+  max-height: 12rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.admin-gallery-thumb {
+  display: block;
+  width: 8rem;
+  height: 5rem;
+  object-fit: cover;
+  margin-top: 0.5rem;
+  border-radius: 0.4rem;
+}
+
+.article-page > h1 {
+  letter-spacing: -0.03em;
+  margin-bottom: 1.25rem;
+}
+
+.article-body {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
 .upvote-button {
   margin-top: 1.5rem;
   padding: 0.55rem 1.1rem;

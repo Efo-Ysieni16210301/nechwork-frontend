@@ -21,6 +21,7 @@ import VerifyAccountPage from "./pages/VerifyAccountPage";
 import CustomerVerificationPage from "./pages/CustomerVerificationPage";
 import CustomerOrdersPage from "./pages/CustomerOrdersPage";
 import CategoryAdminPage from "./pages/CategoryAdminPage";
+import GalleryAdminPage from "./pages/GalleryAdminPage";
 import { mergeProducts, products as fallbackProducts } from "./data/products";
 
 async function loadCatalog() {
@@ -81,6 +82,7 @@ const routes = [
         },
       },
       { path: "admin/categories", element: <CategoryAdminPage /> },
+      { path: "admin/gallery", element: <GalleryAdminPage /> },
       {
         path: "admin/orders",
         element: <AdminOrdersPage />,

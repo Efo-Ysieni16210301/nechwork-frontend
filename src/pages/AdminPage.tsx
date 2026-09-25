@@ -17,6 +17,8 @@ export default function AdminPage() {
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [image, setImage] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -54,11 +56,13 @@ export default function AdminPage() {
         name: name.trim(),
         title: title.trim(),
         content: contentArray,
+      ...(image.trim() ? { image: image.trim() } : {}),
       })
       .then(() => {
         setName("");
         setTitle("");
         setContent("");
+        setImage("");
         setSubmitting(false);
         revalidator.revalidate();
       })
@@ -66,6 +70,26 @@ export default function AdminPage() {
         setError(err.response?.data?.error || "Failed to create article");
         setSubmitting(false);
       });
+  };
+
+  const uploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+    if (!cloudName || !preset) { setError("Cloudinary upload is not configured."); return; }
+    if (!file.type.startsWith("image/") || file.size > 10 * 1024 * 1024) { setError("Choose an image up to 10 MB."); return; }
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("upload_preset", preset);
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, { method: "POST", body });
+      const result = await response.json() as { secure_url?: string; error?: { message?: string } };
+      if (!response.ok || !result.secure_url) throw new Error(result.error?.message || "Image upload failed.");
+      setImage(result.secure_url);
+    } catch (uploadError) { setError(uploadError instanceof Error ? uploadError.message : "Image upload failed."); }
+    finally { setUploading(false); event.target.value = ""; }
   };
 
   const handleDelete = (articleName: string) => {
@@ -103,6 +127,11 @@ export default function AdminPage() {
             className="comment-textarea"
             style={{ minHeight: 160 }}
           />
+          <label>Article image <span className="field-hint">(optional)</span>
+            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={uploadImage} disabled={uploading} />
+            <span className="field-hint">{uploading ? "Uploading..." : "Leave empty for a text-only article."}</span>
+          </label>
+          {image && <img className="article-image-preview" src={image} alt="Article preview" />}
           {error && <p className="comment-error">{error}</p>}
           <button
             type="submit"
