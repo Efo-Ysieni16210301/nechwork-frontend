@@ -24,7 +24,7 @@ export default function SignupPage() {
       await api.put("/profile", {
         firstName,
         lastName,
-        ...(verificationMethod === "phone" ? { phoneNumber } : {}),
+        phoneNumber,
       });
       navigate("/verify-account");
     } catch (err: unknown) {
@@ -63,7 +63,7 @@ export default function SignupPage() {
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           className="comment-input"
-          required={verificationMethod === "phone"}
+          required
         />
         <input
           type="email"

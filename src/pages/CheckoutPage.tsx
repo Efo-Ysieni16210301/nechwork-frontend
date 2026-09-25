@@ -78,6 +78,7 @@ export default function CheckoutPage() {
             shipping: {
               firstName: form.get("firstName"),
               lastName: form.get("lastName"),
+              phoneNumber: form.get("phoneNumber"),
               address: form.get("address"),
               city: form.get("city"),
               postalCode: form.get("postalCode"),
@@ -97,6 +98,7 @@ export default function CheckoutPage() {
           <h2>Delivery details</h2>
           <div className="form-row"><label>First name<input name="firstName" required /></label><label>Last name<input name="lastName" required /></label></div>
           <label>Email address<input type="email" value={user?.email ?? ""} readOnly required /></label>
+          <label>Contact phone number<input name="phoneNumber" type="tel" placeholder="+251912345678" required /></label>
           <label>Address<input name="address" required /></label>
           <div className="form-row"><label>City<input name="city" required /></label><label>Postal code<input name="postalCode" required /></label></div>
           <h2>Payment verification</h2>

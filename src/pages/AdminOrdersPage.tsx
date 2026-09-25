@@ -13,7 +13,7 @@ interface Order {
   transactionId: string;
   paymentProofUrl: string;
   status: string;
-  shipping: { firstName: string; lastName: string; address: string; city: string; postalCode: string };
+  shipping: { firstName: string; lastName: string; phoneNumber?: string; address: string; city: string; postalCode: string };
   createdAt: string;
 }
 
@@ -97,7 +97,7 @@ export default function AdminOrdersPage() {
             <div className="admin-order-header"><div><strong>Order {order._id?.slice(-8) || "unknown"}</strong><span>{order.createdAt ? new Date(order.createdAt).toLocaleString() : "Date unavailable"}</span></div><strong>${Number(order.subtotal || 0).toFixed(2)}</strong></div>
             <p><strong>Customer:</strong> {order.email || "Email unavailable"}</p>
             <p><strong>Items:</strong> {(order.items || []).map((item) => `${item.quantity} × ${item.name}`).join(", ") || "Items unavailable"}</p>
-            <p><strong>Delivery:</strong> {order.shipping ? `${order.shipping.firstName} ${order.shipping.lastName}, ${order.shipping.address}, ${order.shipping.city}, ${order.shipping.postalCode}` : "Delivery details unavailable"}</p>
+            <p><strong>Delivery:</strong> {order.shipping ? `${order.shipping.firstName} ${order.shipping.lastName}, ${order.shipping.phoneNumber || "Phone unavailable"}, ${order.shipping.address}, ${order.shipping.city}, ${order.shipping.postalCode}` : "Delivery details unavailable"}</p>
             <div className="admin-payment-row"><span><strong>Payment:</strong> {order.paymentMethod?.toUpperCase() || "NOT PROVIDED"} · <code>{order.transactionId || "No transaction ID"}</code></span>{order.paymentProofUrl ? <a href={order.paymentProofUrl} target="_blank" rel="noreferrer">View payment proof ↗</a> : <span>No payment proof</span>}</div>
             <label className="order-status">Order status<select value={order.status || "pending"} onChange={(event) => updateStatus(order._id, event.target.value)}>{statuses.map((status) => <option key={status} value={status}>{status.replace("_", " ")}</option>)}</select></label>
           </article>
