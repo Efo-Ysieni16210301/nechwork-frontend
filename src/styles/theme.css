@@ -369,6 +369,45 @@ button {
   * {
     transition: none !important;
   }
+
+  /* Final storefront refinements */
+  .sidebar {
+    overflow: visible;
+  }
+
+  .sidebar-brand::after {
+    background: linear-gradient(
+      90deg,
+      var(--ethiopia-green) 0 33.33%,
+      var(--ethiopia-yellow) 33.33% 66.66%,
+      var(--ethiopia-red) 66.66% 100%
+    );
+    border-radius: 999px;
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 0.25rem;
+    width: 3.2rem;
+  }
+
+  .shop-mega-menu {
+    top: 100%;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    background-image: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-strong);
+  }
+
+  .eyebrow {
+    background: none;
+    color: var(--accent);
+    width: auto;
+  }
 }
 
 /* ---- Buttons ---- */

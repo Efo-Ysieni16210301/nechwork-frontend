@@ -14,6 +14,7 @@ export default function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
   const shopMenuRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<number | undefined>(undefined);
 
   const handleLogout = async () => {
     await logout();
@@ -21,6 +22,11 @@ export default function NavBar() {
   };
 
   const closeMenu = () => setMenuOpen(false);
+  const scheduleShopClose = () => {
+    window.clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = window.setTimeout(() => setShopOpen(false), 180);
+  };
+  const keepShopOpen = () => window.clearTimeout(closeTimerRef.current);
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -36,6 +42,7 @@ export default function NavBar() {
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
+      window.clearTimeout(closeTimerRef.current);
     };
   }, []);
 
@@ -66,7 +73,12 @@ export default function NavBar() {
           </NavLink>
         </li>
         <li>
-          <div className={`shop-nav-item ${shopOpen ? "shop-open" : ""}`} ref={shopMenuRef}>
+          <div
+            className={`shop-nav-item ${shopOpen ? "shop-open" : ""}`}
+            ref={shopMenuRef}
+            onMouseEnter={keepShopOpen}
+            onMouseLeave={scheduleShopClose}
+          >
             <button
               type="button"
               className="shop-menu-trigger"
