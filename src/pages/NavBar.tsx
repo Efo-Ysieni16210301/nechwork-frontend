@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -47,7 +47,28 @@ export default function NavBar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/shop" onClick={closeMenu}>{t("shop")}</NavLink>
+          <div className="shop-nav-item">
+            <NavLink to="/shop" onClick={closeMenu}>{t("shop")}</NavLink>
+            <div className="shop-mega-menu">
+              <div className="mega-menu-links">
+                <span>Shop all</span>
+                <Link to="/shop" onClick={closeMenu}>Build your collection</Link>
+                <Link to="/shop?category=Coffee" onClick={closeMenu}>Browse coffee</Link>
+                <Link to="/shop?category=Tea" onClick={closeMenu}>Browse tea</Link>
+                <Link to="/shop?category=Home%20%26%20gifts" onClick={closeMenu}>Gifts for good mornings</Link>
+              </div>
+              <Link className="mega-menu-card" to="/shop?category=Coffee" onClick={closeMenu}>
+                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=85" alt="" />
+                <strong>Find your everyday cup</strong>
+                <span>Explore coffee →</span>
+              </Link>
+              <Link className="mega-menu-card" to="/gallery" onClick={closeMenu}>
+                <img src="https://images.unsplash.com/photo-1522120573867-e574959f84c8?auto=format&fit=crop&w=700&q=85" alt="" />
+                <strong>Made with intention</strong>
+                <span>See our world →</span>
+              </Link>
+            </div>
+          </div>
         </li>
         <li>
           <NavLink to="/gallery" onClick={closeMenu}>{t("gallery")}</NavLink>

@@ -21,7 +21,12 @@ export default function HomePage() {
           <Link to="/about" className="text-link">Our approach <span>→</span></Link>
         </div>
         </div>
-        <img className="hero-image" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=85" alt="A cup of coffee on a sunny cafe table" />
+        <div className="hero-media" aria-label="A cinematic coffee preparation scene">
+          <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1400&q=85" alt="" />
+          <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1400&q=85" alt="" />
+          <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1400&q=85" alt="" />
+          <div className="hero-media-caption">Small rituals. Big feeling.</div>
+        </div>
       </Reveal>
 
       <Reveal className="ritual-banner" delay={80}>
@@ -55,6 +60,27 @@ export default function HomePage() {
               </Link>
             ) : null;
           })}
+        </div>
+      </Reveal>
+
+      <Reveal className="origin-marquee" delay={150}>
+        <div className="origin-marquee-heading"><p className="eyebrow">From near and far</p><h2>Products with a place to tell.</h2></div>
+        <div className="origin-track">
+          {[...products, ...products].slice(0, 10).map((product, index) => <div className="origin-item" key={`${product.id}-${index}`}><span className="origin-pin">●</span><span>{["Addis Ababa", "Gondar", "Sidama", "Harar", "Metema"][index % 5]}</span><img src={product.image} alt={product.name} /><strong>{product.name}</strong></div>)}
+        </div>
+      </Reveal>
+
+      <Reveal className="trust-stats" delay={170}>
+        <div className="trust-stats-heading">
+          <p className="eyebrow">Made for real life</p>
+          <h2>Good products are better when people can count on them.</h2>
+          <p>We keep listening, tasting, and improving so every order feels considered, useful, and worth sharing.</p>
+        </div>
+        <div className="trust-stats-grid">
+          <div><strong>500+</strong><span>products selected with care</span></div>
+          <div><strong>1,000+</strong><span>orders prepared for customers</span></div>
+          <div><strong>13M+</strong><span>small moments made better</span></div>
+          <div><strong>4.9/5</strong><span>customer experience rating</span></div>
         </div>
       </Reveal>
 
