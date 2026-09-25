@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLoaderData, useRevalidator } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/client";
@@ -31,6 +31,13 @@ export default function ProductAdminPage() {
   const [uploading, setUploading] = useState(false);
   const [imageMode, setImageMode] = useState<"url" | "upload">("upload");
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [categories, setCategories] = useState<string[]>(["Coffee", "Tea", "Pantry", "Home & gifts"]);
+
+  useEffect(() => {
+    void api.get<{ name: string }[]>("/categories").then((response) => {
+      setCategories(response.data.map((category) => category.name));
+    }).catch(() => undefined);
+  }, []);
 
   if (loading) return <p className="article-page">Loading...</p>;
   if (!isAdmin)
@@ -200,10 +207,7 @@ export default function ProductAdminPage() {
                 value={form.category}
                 onChange={(e) => update("category", e.target.value)}
               >
-                <option>Coffee</option>
-                <option>Tea</option>
-                <option>Pantry</option>
-                <option>Home & gifts</option>
+                {categories.map((category) => <option key={category}>{category}</option>)}
               </select>
             </label>
             <label>

@@ -1,16 +1,23 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
-import { categories } from "../data/products";
+import { categories as fallbackCategories } from "../data/products";
 import type { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
 import { useLanguage } from "../context/LanguageContext";
+import api from "../api/client";
 
 export default function ShopPage() {
   const products = useLoaderData() as Product[];
-  const [category, setCategory] = useState<(typeof categories)[number]>("All");
+  const [categories, setCategories] = useState<string[]>([...fallbackCategories]);
+  const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
   const { addToCart } = useCart();
   const { t } = useLanguage();
+  useEffect(() => {
+    void api.get<{ name: string }[]>("/categories").then((response) => {
+      setCategories(["All", ...response.data.map((item) => item.name)]);
+    }).catch(() => undefined);
+  }, []);
   const visibleProducts = useMemo(() => products.filter((product) => {
     const matchesCategory = category === "All" || product.category === category;
     const matchesSearch = `${product.name} ${product.description}`.toLowerCase().includes(query.toLowerCase());

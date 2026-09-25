@@ -20,6 +20,7 @@ import AdminOrdersPage, { AdminOrdersRouteError } from "./pages/AdminOrdersPage"
 import VerifyAccountPage from "./pages/VerifyAccountPage";
 import CustomerVerificationPage from "./pages/CustomerVerificationPage";
 import CustomerOrdersPage from "./pages/CustomerOrdersPage";
+import CategoryAdminPage from "./pages/CategoryAdminPage";
 import { mergeProducts, products as fallbackProducts } from "./data/products";
 
 async function loadCatalog() {
@@ -79,6 +80,7 @@ const routes = [
           return res.data;
         },
       },
+      { path: "admin/categories", element: <CategoryAdminPage /> },
       {
         path: "admin/orders",
         element: <AdminOrdersPage />,
