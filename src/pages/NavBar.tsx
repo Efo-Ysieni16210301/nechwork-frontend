@@ -19,7 +19,10 @@ export default function NavBar() {
   return (
     <nav className="sidebar">
       <div className="sidebar-brand">
-        <NavLink to="/" className="brand-lockup"><span className="brand-mark">◎</span><span>mara</span></NavLink>
+        <NavLink to="/" className="brand-lockup">
+          <span className="brand-mark">◎</span>
+          <span>Nech Work</span>
+        </NavLink>
       </div>
       <ul className="sidebar-links">
         <li>
@@ -41,18 +44,41 @@ export default function NavBar() {
         </li>
         {isAdmin && (
           <>
-            <li><NavLink to="/admin">{t("admin")}</NavLink></li>
-            <li><NavLink to="/admin/products">{t("products")}</NavLink></li>
-            <li><NavLink to="/admin/orders">{t("orders")}</NavLink></li>
-            <li><NavLink to="/admin/customers">{t("customers")}</NavLink></li>
+            <li>
+              <NavLink to="/admin">{t("admin")}</NavLink>
+            </li>
+            <li>
+              <NavLink to="/admin/products">{t("products")}</NavLink>
+            </li>
+            <li>
+              <NavLink to="/admin/orders">{t("orders")}</NavLink>
+            </li>
+            <li>
+              <NavLink to="/admin/customers">{t("customers")}</NavLink>
+            </li>
           </>
         )}
-        {user && !isAdmin && <li><NavLink to="/orders">{t("myOrders")}</NavLink></li>}
+        {user && !isAdmin && (
+          <li>
+            <NavLink to="/orders">{t("myOrders")}</NavLink>
+          </li>
+        )}
       </ul>
 
       <div className="sidebar-auth">
-        <NavLink to="/cart" className="cart-link">{t("bag")} <span>{itemCount}</span></NavLink>
-        <button type="button" className="language-toggle" onClick={toggleLanguage} aria-label={language === "en" ? "Switch to Amharic" : "Switch to English"}>{t("language")}</button>
+        <NavLink to="/cart" className="cart-link">
+          {t("bag")} <span>{itemCount}</span>
+        </NavLink>
+        <button
+          type="button"
+          className="language-toggle"
+          onClick={toggleLanguage}
+          aria-label={
+            language === "en" ? "Switch to Amharic" : "Switch to English"
+          }
+        >
+          {t("language")}
+        </button>
         <button
           type="button"
           className="theme-toggle"
@@ -72,8 +98,12 @@ export default function NavBar() {
           </>
         ) : (
           <>
-            <NavLink to="/login" className="sidebar-login-link">{t("login")}</NavLink>
-            <NavLink to="/signup" className="btn btn-primary nav-signup">{t("signup")}</NavLink>
+            <NavLink to="/login" className="sidebar-login-link">
+              {t("login")}
+            </NavLink>
+            <NavLink to="/signup" className="btn btn-primary nav-signup">
+              {t("signup")}
+            </NavLink>
           </>
         )}
       </div>
