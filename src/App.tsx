@@ -18,6 +18,16 @@ import CheckoutPage from "./pages/CheckoutPage";
 import ProductAdminPage from "./pages/ProductAdminPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
 import VerifyAccountPage from "./pages/VerifyAccountPage";
+import { mergeProducts, products as fallbackProducts } from "./data/products";
+
+async function loadCatalog() {
+  try {
+    const response = await api.get("/products");
+    return mergeProducts(response.data);
+  } catch {
+    return fallbackProducts;
+  }
+}
 
 const routes = [
   {
@@ -25,14 +35,15 @@ const routes = [
     element: <Layout />,
     errorElement: <NotFound />,
     children: [
-      { index: true, element: <HomePage /> },
+      {
+        index: true,
+        element: <HomePage />,
+        loader: loadCatalog,
+      },
       {
         path: "shop",
         element: <ShopPage />,
-        loader: async () => {
-          const res = await api.get("/products");
-          return res.data;
-        },
+        loader: loadCatalog,
       },
       { path: "gallery", element: <GalleryPage /> },
       { path: "cart", element: <CartPage /> },
@@ -68,10 +79,6 @@ const routes = [
       {
         path: "admin/orders",
         element: <AdminOrdersPage />,
-        loader: async () => {
-          const res = await api.get("/admin/orders");
-          return res.data;
-        },
       },
       {
         path: "articles/:name",

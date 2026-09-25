@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Link, useLoaderData, useRevalidator } from "react-router-dom";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/client";
 import { useAuth } from "../context/AuthContext";
 
@@ -19,10 +20,39 @@ interface Order {
 const statuses = ["pending", "under_review", "confirmed", "processing", "shipped", "delivered", "rejected", "cancelled"];
 
 export default function AdminOrdersPage() {
-  const orders = useLoaderData() as Order[];
   const { isAdmin, loading } = useAuth();
-  const revalidator = useRevalidator();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const loadOrders = async () => {
+    setError(null);
+    setOrdersLoading(true);
+    try {
+      const response = await api.get<Order[]>("/admin/orders");
+      setOrders(response.data);
+    } catch (requestError) {
+      const response = (
+        requestError as { response?: { data?: { error?: string }; status?: number } }
+      ).response;
+      setError(
+        response?.data?.error ||
+          (response?.status === 401
+            ? "Your admin session has expired. Please log in again."
+            : response?.status === 403
+              ? "This account is not authorized to view orders."
+              : "Could not load orders. Check that the Render API is running."),
+      );
+    } finally {
+      setOrdersLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!loading && isAdmin) {
+      void loadOrders();
+    }
+  }, [isAdmin, loading]);
 
   if (loading) return <p className="article-page">Loading...</p>;
   if (!isAdmin) return <main className="article-page"><p>You don't have access to this page.</p><Link to="/shop">← Back to shop</Link></main>;
@@ -31,9 +61,12 @@ export default function AdminOrdersPage() {
     setError(null);
     try {
       await api.patch(`/admin/orders/${id}/status`, { status });
-      revalidator.revalidate();
-    } catch {
-      setError("Could not update this order.");
+      await loadOrders();
+    } catch (requestError) {
+      const response = (
+        requestError as { response?: { data?: { error?: string } } }
+      ).response;
+      setError(response?.data?.error || "Could not update this order.");
     }
   };
 
@@ -43,7 +76,8 @@ export default function AdminOrdersPage() {
       <h1>Orders</h1>
       <p>Review payment proof before confirming an order for packing and delivery.</p>
       {error && <p className="comment-error">{error}</p>}
-      {!orders.length && <p>No orders have been submitted yet.</p>}
+      {ordersLoading && <p>Loading orders...</p>}
+      {!ordersLoading && !error && !orders.length && <p>No orders have been submitted yet.</p>}
       <div className="admin-order-list">
         {orders.map((order) => (
           <article className="admin-order-card" key={order._id}>

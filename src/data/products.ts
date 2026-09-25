@@ -3,7 +3,7 @@ export type ProductCategory = "Coffee" | "Tea" | "Pantry" | "Home & gifts";
 export interface Product {
   id: string;
   name: string;
-  category: ProductCategory;
+  category: string;
   description: string;
   price: number;
   image: string;
@@ -81,3 +81,13 @@ export const products: Product[] = [
 ];
 
 export const categories = ["All", "Coffee", "Tea", "Pantry", "Home & gifts"] as const;
+
+export function mergeProducts(remoteProducts: Product[]): Product[] {
+  const productsById = new Map(products.map((product) => [product.id, product]));
+
+  for (const product of remoteProducts) {
+    productsById.set(product.id, product);
+  }
+
+  return Array.from(productsById.values());
+}

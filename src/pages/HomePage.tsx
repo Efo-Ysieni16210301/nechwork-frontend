@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
-import { products } from "../data/products";
+import { Link, useLoaderData } from "react-router-dom";
+import type { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
 
 export default function HomePage() {
+  const products = useLoaderData() as Product[];
   const { addToCart } = useCart();
   return (
     <div className="home-page">
