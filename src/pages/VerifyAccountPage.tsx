@@ -5,7 +5,9 @@ import { useAuth } from "../context/AuthContext";
 import api from "../api/client";
 
 interface Profile {
-  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string;
   phoneVerified: boolean;
 }
 

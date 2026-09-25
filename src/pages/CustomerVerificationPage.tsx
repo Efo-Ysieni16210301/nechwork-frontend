@@ -7,7 +7,9 @@ import { useAuth } from "../context/AuthContext";
 interface Profile {
   uid: string;
   email: string;
-  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string;
   phoneVerified: boolean;
 }
 
@@ -50,9 +52,9 @@ export default function CustomerVerificationPage() {
       <ul className="comment-list">
         {profiles.map((profile) => (
           <li className="comment-item admin-article-row" key={profile.uid}>
-            <span><strong>{profile.email}</strong><br /><span className="comment-author">{profile.phoneNumber} · {profile.phoneVerified ? "Approved" : "Pending"}</span></span>
+            <span><strong>{profile.firstName} {profile.lastName}</strong><br /><span className="comment-author">{profile.email} · {profile.phoneNumber || "No phone number"} · {profile.phoneVerified ? "Approved" : "Pending"}</span></span>
             <span className="admin-product-actions">
-              <button className="comment-link-btn" onClick={() => void setStatus(profile.uid, true)}>Approve</button>
+              <button className="comment-link-btn" onClick={() => void setStatus(profile.uid, true)} disabled={!profile.phoneNumber}>Approve</button>
               <button className="comment-link-btn danger" onClick={() => void setStatus(profile.uid, false)}>Revoke</button>
             </span>
           </li>

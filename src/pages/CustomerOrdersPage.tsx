@@ -26,11 +26,21 @@ export default function CustomerOrdersPage() {
   useEffect(() => {
     if (loading || !user) return;
     setLoadingOrders(true);
+    const cacheKey = `customer-orders:${user.uid}`;
     void api.get<CustomerOrder[]>("/orders")
-      .then((response) => setOrders(response.data))
+      .then((response) => {
+        setOrders(response.data);
+        localStorage.setItem(cacheKey, JSON.stringify(response.data));
+      })
       .catch((requestError) => {
         const response = (requestError as { response?: { data?: { error?: string } } }).response;
-        setError(response?.data?.error || t("couldNotLoadOrders"));
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          setOrders(JSON.parse(cached) as CustomerOrder[]);
+          setError("Offline: showing your last saved orders.");
+        } else {
+          setError(response?.data?.error || t("couldNotLoadOrders"));
+        }
       })
       .finally(() => setLoadingOrders(false));
   }, [loading, t, user]);

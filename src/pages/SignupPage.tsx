@@ -7,6 +7,8 @@ export default function SignupPage() {
   const { signup, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationMethod, setVerificationMethod] = useState<"email" | "phone">("email");
@@ -19,9 +21,11 @@ export default function SignupPage() {
     setSubmitting(true);
     try {
       await signup(email, password);
-      if (verificationMethod === "phone") {
-        await api.put("/profile", { phoneNumber });
-      }
+      await api.put("/profile", {
+        firstName,
+        lastName,
+        ...(verificationMethod === "phone" ? { phoneNumber } : {}),
+      });
       navigate("/verify-account");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Unable to create account.");
@@ -44,6 +48,10 @@ export default function SignupPage() {
     <div className="auth-page">
       <h1>Sign up</h1>
       <form onSubmit={handleSubmit} className="auth-form">
+        <div className="form-row">
+          <label>First name<input value={firstName} onChange={(e) => setFirstName(e.target.value)} required /></label>
+          <label>Last name<input value={lastName} onChange={(e) => setLastName(e.target.value)} required /></label>
+        </div>
         <fieldset>
           <legend>Choose one verification method</legend>
           <label><input type="radio" name="verificationMethod" checked={verificationMethod === "email"} onChange={() => setVerificationMethod("email")} /> Email verification</label>

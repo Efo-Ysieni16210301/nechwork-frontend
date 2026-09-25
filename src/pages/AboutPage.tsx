@@ -1,3 +1,5 @@
+import { company } from "../company";
+
 export default function AboutPage() {
   return (
     <div className="about-page">
@@ -17,6 +19,18 @@ export default function AboutPage() {
           pantry staples and hand-thrown homeware, each piece has a clear origin
           and a human story.
         </p>
+      </section>
+
+      <section className="about-section company-contact">
+        <h2>Contact us</h2>
+        <p><strong>{company.name}</strong></p>
+        {company.offices.map((office) => (
+          <p key={office.name}>
+            <strong>{office.name}</strong><br />
+            Phone: <a href={`tel:${office.phone}`}>{office.phone}</a><br />
+            Address: {office.address}
+          </p>
+        ))}
       </section>
 
       <section className="about-section">

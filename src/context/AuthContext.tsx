@@ -76,7 +76,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const savePhoneNumber = async (phoneNumber: string) => {
-    await api.put("/profile", { phoneNumber });
+    const currentProfile = await api.get<{ firstName: string; lastName: string }>("/profile");
+    await api.put("/profile", {
+      firstName: currentProfile.data.firstName,
+      lastName: currentProfile.data.lastName,
+      phoneNumber,
+    });
     await refreshUser();
   };
 
