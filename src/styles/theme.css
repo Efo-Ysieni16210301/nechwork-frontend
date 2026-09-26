@@ -58,25 +58,6 @@
   max-width: 17ch;
 }
 
-.btn-primary {
-  background: linear-gradient(100deg, var(--ethiopia-green), #2f6d32 48%, var(--ethiopia-red));
-  background-size: 180% 100%;
-  transition: background-position 0.3s ease, transform 0.2s ease;
-}
-
-.btn-primary:hover {
-  background-position: 100% 0;
-  transform: translateY(-2px);
-}
-
-.eyebrow {
-  background: linear-gradient(90deg, var(--ethiopia-green), var(--ethiopia-yellow), var(--ethiopia-red));
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  width: fit-content;
-}
-
 .category-showcase-grid {
   display: grid;
   gap: 1rem;
@@ -129,21 +110,6 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   position: relative;
-}
-
-.announcement-bar::after {
-  background: linear-gradient(
-    90deg,
-    var(--ethiopia-green) 0 33.33%,
-    var(--ethiopia-yellow) 33.33% 66.66%,
-    var(--ethiopia-red) 66.66% 100%
-  );
-  bottom: 0;
-  content: "";
-  height: 3px;
-  left: 0;
-  position: absolute;
-  right: 0;
 }
 
 .category-showcase-card strong {
@@ -375,39 +341,10 @@ button {
     overflow: visible;
   }
 
-  .sidebar-brand::after {
-    background: linear-gradient(
-      90deg,
-      var(--ethiopia-green) 0 33.33%,
-      var(--ethiopia-yellow) 33.33% 66.66%,
-      var(--ethiopia-red) 66.66% 100%
-    );
-    border-radius: 999px;
-    content: "";
-    display: block;
-    height: 3px;
-    margin-top: 0.25rem;
-    width: 3.2rem;
-  }
-
   .shop-mega-menu {
     top: 100%;
   }
 
-  .btn-primary {
-    background: var(--primary);
-    background-image: none;
-  }
-
-  .btn-primary:hover {
-    background: var(--primary-strong);
-  }
-
-  .eyebrow {
-    background: none;
-    color: var(--accent);
-    width: auto;
-  }
 }
 
 /* ---- Buttons ---- */
@@ -771,18 +708,6 @@ button {
   font-size: 0.95rem;
 }
 
-.telegram-login-block {
-  align-items: center;
-  display: grid;
-  gap: 0.7rem;
-  justify-items: center;
-  margin-top: 1rem;
-}
-
-.telegram-login-block > span {
-  color: var(--ink-soft);
-  font-size: 0.8rem;
-}
 
 /* ---- Comments ---- */
 .comments-section {
@@ -1092,9 +1017,6 @@ button {
   --on-primary: #fffaf1;
   --accent: #b5542f;
   --accent-soft: #f1d9c8;
-  --ethiopia-green: #078930;
-  --ethiopia-yellow: #fcd116;
-  --ethiopia-red: #da121a;
 }
 
 body {

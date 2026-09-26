@@ -18,7 +18,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import ProductAdminPage from "./pages/ProductAdminPage";
 import AdminOrdersPage, { AdminOrdersRouteError } from "./pages/AdminOrdersPage";
 import VerifyAccountPage from "./pages/VerifyAccountPage";
-import CustomerVerificationPage from "./pages/CustomerVerificationPage";
+import CustomerContactsPage from "./pages/CustomerContactsPage";
 import CustomerOrdersPage from "./pages/CustomerOrdersPage";
 import CategoryAdminPage from "./pages/CategoryAdminPage";
 import GalleryAdminPage from "./pages/GalleryAdminPage";
@@ -90,7 +90,7 @@ const routes = [
       },
       {
         path: "admin/customers",
-        element: <CustomerVerificationPage />,
+        element: <CustomerContactsPage />,
       },
       {
         path: "articles/:name",

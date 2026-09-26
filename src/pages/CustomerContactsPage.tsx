@@ -10,10 +10,9 @@ interface Profile {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  phoneVerified: boolean;
 }
 
-export default function CustomerVerificationPage() {
+export default function CustomerContactsPage() {
   const { isAdmin, loading } = useAuth();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +22,7 @@ export default function CustomerVerificationPage() {
       const response = await api.get<Profile[]>("/admin/profiles");
       setProfiles(response.data);
     } catch {
-      setError("Could not load customer verification requests.");
+      setError("Could not load customer contact details.");
     }
   };
 
@@ -34,29 +33,16 @@ export default function CustomerVerificationPage() {
   if (loading) return <p className="article-page">Loading...</p>;
   if (!isAdmin) return <main className="article-page"><p>You don't have access to this page.</p><Link to="/shop">Back to shop</Link></main>;
 
-  const setStatus = async (uid: string, verified: boolean) => {
-    try {
-      await api.patch(`/admin/profiles/${uid}/phone-status`, { verified });
-      await loadProfiles();
-    } catch {
-      setError("Could not update phone verification.");
-    }
-  };
-
   return (
     <main className="article-page">
       <p className="eyebrow">Store management</p>
-      <h1>Customer verification</h1>
-      <p>Review phone numbers submitted by customers. Confirm them only after checking the customer through your chosen manual process.</p>
+      <h1>Customer contacts</h1>
+      <p>Customer names, email addresses, and phone numbers for order delivery and support.</p>
       {error && <p className="comment-error">{error}</p>}
       <ul className="comment-list">
         {profiles.map((profile) => (
           <li className="comment-item admin-article-row" key={profile.uid}>
-            <span><strong>{profile.firstName} {profile.lastName}</strong><br /><span className="comment-author">{profile.email} · {profile.phoneNumber} · {profile.phoneVerified ? "Approved" : "Pending"}</span></span>
-            <span className="admin-product-actions">
-              <button className="comment-link-btn" onClick={() => void setStatus(profile.uid, true)}>Approve</button>
-              <button className="comment-link-btn danger" onClick={() => void setStatus(profile.uid, false)}>Revoke</button>
-            </span>
+            <span><strong>{profile.firstName} {profile.lastName}</strong><br /><span className="comment-author">{profile.email} · {profile.phoneNumber || "Phone not provided"}</span></span>
           </li>
         ))}
       </ul>

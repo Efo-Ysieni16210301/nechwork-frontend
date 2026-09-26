@@ -11,7 +11,6 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [verificationMethod, setVerificationMethod] = useState<"email" | "phone">("email");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -52,11 +51,6 @@ export default function SignupPage() {
           <label>First name<input value={firstName} onChange={(e) => setFirstName(e.target.value)} required /></label>
           <label>Last name<input value={lastName} onChange={(e) => setLastName(e.target.value)} required /></label>
         </div>
-        <fieldset>
-          <legend>Choose one verification method</legend>
-          <label><input type="radio" name="verificationMethod" checked={verificationMethod === "email"} onChange={() => setVerificationMethod("email")} /> Email verification</label>
-          <label><input type="radio" name="verificationMethod" checked={verificationMethod === "phone"} onChange={() => setVerificationMethod("phone")} /> Phone verification by manual approval</label>
-        </fieldset>
         <input
           type="tel"
           placeholder="Phone number (+251912345678)"
@@ -71,6 +65,7 @@ export default function SignupPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="comment-input"
+          required
         />
         <input
           type="password"
@@ -78,6 +73,8 @@ export default function SignupPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="comment-input"
+          minLength={6}
+          required
         />
         {error && <p className="comment-error">{error}</p>}
         <button type="submit" disabled={submitting} className="comment-submit">
